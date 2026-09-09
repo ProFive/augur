@@ -1,4 +1,4 @@
-[🇨🇳 中文](README.md) | 🇺🇸 English
+[🇨🇳 中文](README.md) | 🇺🇸 English | [🇻🇳 Tiếng Việt](README_VI.md)
 
 <div align="center">
 
