@@ -1,6 +1,6 @@
 # Vietnam Market Support — Plan
 
-**Status:** Draft — awaiting approval before implementation
+**Status:** Implemented 2026-09-09 — see §9 for what shipped and where this plan was wrong
 **Date:** 2026-09-09
 **Scope decision:** Additive. Vietnam (HOSE / HNX / UPCoM) is added as a third market
 alongside the existing US and China coverage. No China or US behavior is removed,
@@ -210,3 +210,94 @@ for phase 1, flagged for follow-up.
 1. Approve `vnstock` as an optional dependency? (blocks phase 2)
 2. Canonical ticker form — `VNM.VN` (Yahoo-compatible) or bare `VNM`? Plan assumes `.VN`.
 3. Is Vietnamese UI localization wanted now, or English-only VN data first?
+
+---
+
+## 9. Implementation record
+
+Shipped 2026-09-09. Full suite: **2607 passed, 0 failed** (pre-change baseline 2480;
++127 new tests). Three places where this plan turned out to be wrong or too risky are
+corrected below — the sections above are left as originally written so the reasoning
+that led to the change stays readable.
+
+### 9.1 Correction — the i18n section named the wrong system
+
+§5 said to add `src/dashboard/i18n/vi.json` and "register it in `i18n.js`". That
+conflates two independent systems:
+
+| System | Source of strings | Locales | Selected by |
+|---|---|---|---|
+| Client-side | `window.I18N` inline dicts in `static/js/i18n.js` | zh, en, ja, ko, **vi** | Settings selector (`setAppLang`) → `localStorage` |
+| Server-side | `src/dashboard/i18n/{lang}.json` via `GET /api/i18n/{lang}` | en, zh only | `augur_lang` cookie, allowlisted in `routes/optimizer.py:128,146` |
+
+The Settings **Interface Language** selector reads `window.I18N` and never touches the
+cookie or the JSON files. `ja` and `ko` — the established partial locales — have no JSON
+file and no allowlist entry either.
+
+Vietnamese therefore shipped in `i18n.js` (212 keys, byte-identical key set to `ja`,
+falling back current → en → zh) plus a `Tiếng Việt` button in `settings.html`.
+Committed separately in `5e3c26a`.
+
+**`vi.json` was deliberately not added.** On its own it is unreachable — no code path
+selects it without also widening the `("en","zh")` allowlist and the cookie logic, which
+would be new behavior for `ja`/`ko` too and is outside this plan's scope. The acceptance
+criterion "`vi.json` key set matches `en.json`" is therefore **dropped, not missed**.
+Server-rendered strings remain en/zh for every locale, exactly as they already were for
+Japanese and Korean.
+
+### 9.2 Deviation — bare symbols never resolve to Vietnam
+
+§6 Phase 1 had a bare symbol resolve to VN when present in a curated set. That is unsafe:
+several liquid VN symbols are live US listings. `VNM` is both Vinamilk on HOSE **and the
+Vanguard FTSE Vietnam ETF on NYSE Arca**; `PLX` is also a US listing. Inferring VN from a
+bare symbol would silently reroute tickers users analyze today — a regression, and the
+opposite of this plan's additive premise.
+
+Implemented rule: **only an explicit suffix resolves to a non-US market.** A bare symbol
+always resolves to US, exactly as before `augur/markets.py` existed. `VN_SYMBOLS` still
+ships and now backs `suggest_vn_ticker()`, which `search_ticker` calls so that typing
+`VNM` also surfaces `VNM.VN` — discoverability without ambiguity. This strictly improves
+the "bare 3-letter symbols collide with US tickers" risk in §8 rather than mitigating it.
+
+### 9.3 Addition — Hong Kong split out of the CN entry
+
+§6 folded `.HK` into the CN market. Encoding HK issuers as CNY would have been new bad
+data, so `HK` is its own `Market` (HKD, `Asia/Hong_Kong`, T+2, no price band). Nothing
+consumes it beyond the EDGAR skip, so this changes no existing behavior.
+
+### 9.4 What shipped
+
+| File | Change |
+|---|---|
+| `src/augur/markets.py` | **New.** `Market` dataclass, `MARKETS` table (US/CN/HK/VN), `resolve_market`, `strip_market_suffix`, `suggest_vn_ticker`, `VN_SYMBOLS` |
+| `src/augur/datasources/vnstock_provider.py` | **New.** `VNStockProvider`, lazy import, `is_configured()`, defensive multi-candidate field extraction |
+| `src/augur/datasources/__init__.py` | `default_providers(market="US")`; VN prepends vnstock when installed; `available_sources()` reports it |
+| `src/augur/data.py` | `_get_providers(market)` with a separate per-market cache; `_build_context_from_providers` resolves market and backfills `currency`; EDGAR overlay skipped for non-EDGAR markets; VN-Index in `fetch_market_overview`; `search_ticker` suggests `.VN` |
+| `pyproject.toml` | New optional extra `vn = ["vnstock>=3.2"]` |
+| `tests/test_markets.py` | **New**, 83 tests |
+| `tests/test_vnstock_provider.py` | **New**, 27 tests, network fully mocked |
+| `tests/test_vn_market_integration.py` | **New**, 17 tests, chain/currency/EDGAR wiring |
+
+### 9.5 Known limits
+
+- **The vnstock field mapping is unverified against a live response.** `vnstock` is not
+  installed in this environment and probing the VN endpoints is one of this plan's stop
+  conditions, so column names were taken from its documented v3 API, not observed. This
+  is deliberately not load-bearing: every access goes through `_pick()` multi-candidate
+  matching, and any mismatch raises `DataProviderError` and falls through to yfinance
+  `.VN`. **First run against real vnstock should diff the returned dict against
+  `MarketContext` and correct the candidate name lists.**
+- **`^VNINDEX` is the assumed Yahoo symbol for VN-Index**, also unverified. A wrong symbol
+  degrades to that one row being absent from the market overview — per-instrument failure
+  is already isolated.
+- **`vn` is not part of the `all` extra.** vnstock is unofficial with heavy pins;
+  `pip install augur-agents[all]` should not inherit that. Install it explicitly:
+  `pip install -e ".[vn]"`.
+- **Magnitudes for VN are billions of VND, not USD.** No FX conversion is performed —
+  that needs a live rate source. `currency` is the discriminator and is now always
+  populated. Cross-market ranking and screening call sites still have to read it; that
+  audit is not done.
+- **Persona scoring is unchanged.** ICB sector strings fall into
+  `consensus/industry_matrix.py`'s default bucket, and the ±7% HOSE band compresses the
+  volatility tails that drawdown-based scores assume. Both are documented caveats, not
+  silently rescaled. Follow-up work.

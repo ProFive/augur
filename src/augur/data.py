@@ -29,6 +29,7 @@ from dataclasses import fields as _dataclass_fields
 from datetime import datetime
 from typing import Any, Dict, List, Optional
 
+from augur.markets import resolve_market, suggest_vn_ticker
 from augur.personas.base import MarketContext
 
 logger = logging.getLogger(__name__)
@@ -133,6 +134,7 @@ def reset_providers_cache() -> None:
     global _providers_cache
     with _providers_lock:
         _providers_cache = None
+        _market_providers_cache.clear()
 
 
 def cache_info() -> Dict[str, Any]:
@@ -214,15 +216,37 @@ def _get_yfinance() -> Any:
 _providers_lock = threading.Lock()
 _providers_cache: Optional[List[Any]] = None
 
+#: 拥有**专属** provider 链的市场。其余市场共用 ``_providers_cache``，
+#: 因此它们的取数路径与本机制引入前逐字节一致。
+_MARKET_SPECIFIC_CHAINS = frozenset({"VN"})
 
-def _get_providers() -> List[Any]:
-    """返回（并缓存）默认 provider 链：yfinance 优先，stooq 兜底。
+#: 专属链的缓存，按市场代码分桶。
+_market_providers_cache: Dict[str, List[Any]] = {}
+
+
+def _get_providers(market: str = "US") -> List[Any]:
+    """返回（并缓存）指定市场的 provider 链。
+
+    绝大多数市场（US / CN / HK / 未知）共用同一条默认链——yfinance 优先、
+    stooq 兜底——仍然缓存在 ``_providers_cache`` 里，赋值即可替换，
+    既有测试的 stub 方式不受影响。
+
+    只有 ``_MARKET_SPECIFIC_CHAINS`` 里的市场（目前仅越南）走独立分桶缓存，
+    因为它们的链首多了一个本地数据源。
 
     provider 无状态（yfinance loader 在调用时按属性解析），可安全复用。
-    测试可通过 patch 本函数注入 mock provider 链。
+    测试可通过 patch 本函数或直接给 ``_providers_cache`` 赋值注入 mock 链。
     """
     global _providers_cache
+    code = (market or "US").strip().upper()
     with _providers_lock:
+        if code in _MARKET_SPECIFIC_CHAINS:
+            cached = _market_providers_cache.get(code)
+            if cached is None:
+                from augur.datasources import default_providers
+                cached = default_providers(code)
+                _market_providers_cache[code] = cached
+            return cached
         if _providers_cache is None:
             from augur.datasources import default_providers
             _providers_cache = default_providers()
@@ -245,10 +269,11 @@ def _build_context_from_providers(ticker: str) -> MarketContext:
     """
     valid_fields = _market_context_field_names()
     upper = ticker.upper()
+    market = resolve_market(upper)
 
     errors: List[str] = []
 
-    for provider in _get_providers():
+    for provider in _get_providers(market.code):
         name = getattr(provider, "name", provider.__class__.__name__)
         try:
             raw = provider.fetch(ticker)
@@ -267,12 +292,17 @@ def _build_context_from_providers(ticker: str) -> MarketContext:
         # 仅保留 MarketContext 合法字段，避免未知键导致 TypeError
         kwargs = {k: v for k, v in raw.items() if k in valid_fields and k != "ticker"}
         ctx = MarketContext(ticker=upper, **kwargs)
+        # 数据源没给计价货币时，用市场注册表补齐。VND 与 USD 的量纲差约 25000 倍，
+        # 下游任何跨市场比较都必须能读到 currency，留空比补齐更危险。
+        if not ctx.currency:
+            ctx.currency = market.currency
         setattr(ctx, "data_source", source)
         return ctx
 
     # 所有数据源均失败：返回空 context，但带来源标记与具体错误，便于下游识别“无数据”状态
     logger.warning("all data providers failed for %s; returning empty context", ticker)
     ctx = MarketContext(ticker=upper)
+    ctx.currency = market.currency
     setattr(ctx, "data_source", "none")
     if errors:
         setattr(ctx, "data_error", f"all providers failed for {ticker}: " + "; ".join(errors))
@@ -308,6 +338,11 @@ def _overlay_edgar_fundamentals(ctx: MarketContext) -> None:
     just leaves the context exactly as the provider chain built it.
     """
     if not ctx.price or ctx.price <= 0:
+        return
+    # SEC EDGAR 只覆盖美国发行人。越南没有对应物（基本面来自 vnstock），
+    # 中国/香港同样不在覆盖范围内——对这些市场调用只是白跑一趟网络请求，
+    # 更糟的是可能撞上同名的美股 ticker，把别家公司的基本面盖上去。
+    if not resolve_market(ctx.ticker).has_edgar:
         return
     try:
         from augur.consensus.edgar_fundamentals import fetch_edgar_fundamentals
@@ -594,6 +629,7 @@ def fetch_market_overview(force_refresh: bool = False) -> Dict[str, Any]:
         ("us10y", "^TNX", "美债10年", "利率"),
         ("hsi", "^HSI", "恒生指数", "指数"),
         ("csi300", "000300.SS", "沪深300", "指数"),
+        ("vnindex", "^VNINDEX", "越南VN指数", "指数"),
         ("ftse", "^FTSE", "富时100", "指数"),
         ("dax", "^GDAXI", "德国DAX", "指数"),
         ("nikkei", "^N225", "日经225", "指数"),
@@ -892,6 +928,22 @@ def search_ticker(query: str) -> List[Dict[str, Any]]:
             results, f"network_error: failed to search {normalized}: {exc}",
             source="error",
         )
+
+    # 裸代码不会解析到越南市场（见 augur.markets 的说明），所以当用户输入的是
+    # 已知越南代码时，额外给出 .VN 形式作为候选——否则越南标的实际上不可发现。
+    vn_form = suggest_vn_ticker(normalized)
+    if vn_form and not any(r.get("symbol") == vn_form for r in results):
+        try:
+            vn_info = yf.Ticker(vn_form).info or {}
+        except Exception:
+            vn_info = {}
+        if vn_info.get("symbol"):
+            results.append({
+                "symbol": vn_info.get("symbol", vn_form),
+                "name": vn_info.get("longName") or vn_info.get("shortName", ""),
+                "exchange": vn_info.get("exchange", ""),
+                "type": vn_info.get("quoteType", "EQUITY"),
+            })
 
     results.data_source = "yfinance"
     return results
