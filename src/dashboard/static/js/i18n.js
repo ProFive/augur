@@ -2610,11 +2610,15 @@ window.I18N = {
 };
 
 (function() {
-    var _currentLang = 'zh';
+    var _currentLang = 'vi';
     // Language cycle order and label for the toggle button (shows *next* lang)
-    var _LANG_CYCLE = ['zh', 'en', 'ja', 'ko', 'vi'];
-    var _LANG_NEXT_LABEL = { zh: 'EN', en: '\u65E5', ja: '\uD55C', ko: 'VI', vi: '\u4E2D' };
-    var _LANG_HTML_ATTR = { zh: 'zh-CN', en: 'en', ja: 'ja', ko: 'ko', vi: 'vi' };
+    // var _LANG_CYCLE = ['zh', 'en', 'ja', 'ko', 'vi'];
+    // var _LANG_NEXT_LABEL = { zh: 'EN', en: '\u65E5', ja: '\uD55C', ko: 'VI', vi: '\u4E2D' };
+    // var _LANG_HTML_ATTR = { zh: 'zh-CN', en: 'en', ja: 'ja', ko: 'ko', vi: 'vi' };
+    //Show vietnamese and english only for now, hide other languages
+    var _LANG_CYCLE = ['vi', 'en'];
+    var _LANG_NEXT_LABEL = { vi: 'EN', en: 'VI' };
+    var _LANG_HTML_ATTR = { vi: 'vi', en: 'en' };
     // Banner: en uses EN banner, others use zh banner
     var _LANG_BANNER = { en: '/docs/images/hero-banner-en.svg' };
 
