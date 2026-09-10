@@ -21,7 +21,7 @@ router = APIRouter()
 
 @router.get("/history", response_class=HTMLResponse)
 async def history_page(request: Request):
-    return templates.TemplateResponse(request=request, name="history.html", context={"title": "历史记录"})
+    return templates.TemplateResponse(request=request, name="history.html", context={"title": "History"})
 
 
 @router.get("/api/history")
@@ -48,13 +48,13 @@ def api_list_history(
             records = list_history(page=page, per_page=per_page, ticker_filter=ticker_filter, signal_filter=signal_filter)
         except Exception as e:
             logger.warning("history list (paginated) failed: %s", e)
-            return {"items": [], "total": 0, "page": page, "per_page": per_page, "pages": 0, "error": "history_unavailable", "message": f"历史记录读取失败: {e}"}
+            return {"items": [], "total": 0, "page": page, "per_page": per_page, "pages": 0, "error": "history_unavailable", "message": f"Failed to read history: {e}"}
         return {"items": records, "total": total, "page": page, "per_page": per_page, "pages": total_pages}
     try:
         records = list_history(limit=limit, ticker_filter=ticker_filter, signal_filter=signal_filter)
     except Exception as e:
         logger.warning("history list failed: %s", e)
-        return {"records": [], "count": 0, "error": "history_unavailable", "message": f"历史记录读取失败: {e}"}
+        return {"records": [], "count": 0, "error": "history_unavailable", "message": f"Failed to read history: {e}"}
     return {"records": records, "count": len(records)}
 
 
@@ -83,7 +83,7 @@ async def api_delete_history_item(history_id: str):
     deleted = delete_history(history_id)
     if not deleted:
         raise HTTPException(status_code=404, detail="History record not found")
-    return {"status": "ok", "message": "已删除"}
+    return {"status": "ok", "message": "Deleted history record", "history_id": history_id}
 
 
 @router.delete("/api/history")
@@ -93,5 +93,5 @@ async def api_clear_history():
         count = clear_history()
     except Exception as e:
         logger.warning("clear history failed: %s", e)
-        raise HTTPException(status_code=500, detail=f"清除历史记录失败: {e}")
-    return {"status": "ok", "deleted": count, "message": f"已清除 {count} 条记录"}
+        raise HTTPException(status_code=500, detail=f"Failed to clear history: {e}")
+    return {"status": "ok", "deleted": count, "message": f"Cleared {count} history records"}

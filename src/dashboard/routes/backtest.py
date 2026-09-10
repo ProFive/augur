@@ -10,14 +10,14 @@ from dashboard.deps import get_registry, templates
 router = APIRouter()
 
 
-@router.get("/backtest", response_class=HTMLResponse, summary="历史回测页面")
+@router.get("/backtest", response_class=HTMLResponse, summary="Historical Backtesting Page")
 async def backtest_page(request: Request):
     return templates.TemplateResponse(request=request, name="backtest.html", context={
-        "title": "历史回测 - Agent IC",
+        "title": "Historical Backtesting - Agent IC",
     })
 
 
-@router.get("/api/backtest/run", summary="运行历史回测")
+@router.get("/api/backtest/run", summary="Run Historical Backtest")
 async def api_run_backtest(
     ticker: str = "AAPL",
     days: int = 30,
@@ -118,7 +118,7 @@ async def api_run_backtest(
     }
 
 
-@router.get("/api/backtest/leaderboard", summary="获取IC排行榜")
+@router.get("/api/backtest/leaderboard", summary="Get IC Leaderboard")
 async def api_ic_leaderboard():
     """Get saved IC leaderboard, enriched with live LearningEngine accuracy when available."""
     from augur.backtest import Backtester

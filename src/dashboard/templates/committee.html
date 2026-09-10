@@ -136,20 +136,20 @@
 {% block content %}
 <header class="page-header mb-16">
     <div class="page-header__text">
-        <h1 class="page-title" data-i18n="committee-title">投资委员会</h1>
-        <p class="page-lead" data-i18n="committee-desc">召集多位投资大师，独立分析，汇聚裁决——委员会机制比单打独斗更可靠</p>
+        <h1 class="page-title" data-i18n="committee-title">Investment Committee</h1>
+        <p class="page-lead" data-i18n="committee-desc">Bringing together multiple investment masters for independent analysis and collective judgment—a committee-based approach is more reliable than acting alone.</p>
     </div>
 </header>
 
 <!-- Preset Committees -->
 <div class="mb-16">
-    <div style="font:600 0.72rem/1 var(--font-pixfin); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;" data-i18n="committee-presets">预设委员会</div>
+    <div style="font:600 0.72rem/1 var(--font-pixfin); color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:8px;" data-i18n="committee-presets">Preset Committees</div>
     <div style="display:flex; gap:8px; flex-wrap:wrap;">
-        <button class="btn btn-sm btn-ghost" onclick="loadPreset('value')" style="font-size:0.75rem;">🏛️ <span data-i18n="preset-value">经典价值</span></button>
-        <button class="btn btn-sm btn-ghost" onclick="loadPreset('china')" style="font-size:0.75rem;">🇨🇳 <span data-i18n="preset-china">中国价值</span></button>
-        <button class="btn btn-sm btn-ghost" onclick="loadPreset('macro')" style="font-size:0.75rem;">🌐 <span data-i18n="preset-macro">宏观全天候</span></button>
-        <button class="btn btn-sm btn-ghost" onclick="loadPreset('growth')" style="font-size:0.75rem;">🚀 <span data-i18n="preset-growth">创新成长</span></button>
-        <button class="btn btn-sm btn-ghost" onclick="loadPreset('all')" style="font-size:0.75rem;">📊 <span data-i18n="preset-all">全体委员会</span></button>
+        <button class="btn btn-sm btn-ghost" onclick="loadPreset('value')" style="font-size:0.75rem;">🏛️ <span data-i18n="preset-value">Classic Value</span></button>
+        <button class="btn btn-sm btn-ghost" onclick="loadPreset('china')" style="font-size:0.75rem;">🇨🇳 <span data-i18n="preset-china">China Value</span></button>
+        <button class="btn btn-sm btn-ghost" onclick="loadPreset('macro')" style="font-size:0.75rem;">🌐 <span data-i18n="preset-macro">Macro All-Weather</span></button>
+        <button class="btn btn-sm btn-ghost" onclick="loadPreset('growth')" style="font-size:0.75rem;">🚀 <span data-i18n="preset-growth">Innovative Growth</span></button>
+        <button class="btn btn-sm btn-ghost" onclick="loadPreset('all')" style="font-size:0.75rem;">📊 <span data-i18n="preset-all">Full Committee</span></button>
     </div>
 </div>
 
@@ -157,31 +157,30 @@
 <div class="card mb-20" style="padding:20px;">
     <div style="display:flex; gap:12px; flex-wrap:wrap; margin-bottom:16px;">
         <div style="flex:0 0 140px;">
-            <label class="form-label" data-i18n="committee-ticker-label">股票代码</label>
+            <label class="form-label" data-i18n="committee-ticker-label">Ticker</label>
             <input id="committee-ticker" type="text" class="form-input" placeholder="AAPL" maxlength="15"
                    style="text-transform:uppercase; font-family:var(--font-data); font-weight:700; letter-spacing:1px;"
                    oninput="this.value=this.value.toUpperCase()">
         </div>
         <div style="flex:1; min-width:240px;">
-            <label class="form-label" data-i18n="committee-question-label">提问（可选）</label>
+            <label class="form-label" data-i18n="committee-question-label">Question (Optional)</label>
             <input id="committee-question" type="text" class="form-input"
-                   placeholder="护城河是否真实？当前估值合理吗？" maxlength="200">
+                   placeholder="Is the moat real? Is the current valuation reasonable?" maxlength="200">
         </div>
         <div style="display:flex; align-items:flex-end;">
             <button class="btn btn-primary" onclick="runCommittee()" id="committee-btn">
-                &#x1F3DB; <span data-i18n="committee-run">召开委员会</span>
+                &#x1F3DB; <span data-i18n="committee-run">Run Committee</span>
             </button>
         </div>
     </div>
 
     <!-- Agent selector -->
     <div style="margin-bottom:8px; display:flex; align-items:center; justify-content:space-between;">
-        <span style="font:600 0.75rem/1 var(--font-pixfin); color:var(--text-muted); text-transform:uppercase;" data-i18n="committee-select-masters">选择参会大师</span>
+        <span style="font:600 0.75rem/1 var(--font-pixfin); color:var(--text-muted); text-transform:uppercase;" data-i18n="committee-select-masters">Select Masters</span>
         <div style="display:flex; gap:8px;">
-            <button class="btn btn-sm btn-ghost" onclick="selectAll()" data-i18n="committee-select-all">全选</button>
-            <button class="btn btn-sm btn-ghost" onclick="clearAll()" data-i18n="committee-clear-all">清空</button>
-            <span id="selected-count" style="font-size:0.75rem; color:var(--text-muted); line-height:28px;">0 位</span>
-        </div>
+            <button class="btn btn-sm btn-ghost" onclick="selectAll()" data-i18n="committee-select-all">Select All</button>
+            <button class="btn btn-sm btn-ghost" onclick="clearAll()" data-i18n="committee-clear-all">Clear All</button>
+            <span id="selected-count" style="font-size:0.75rem; color:var(--text-muted); line-height:28px;">0 selected</span>
     </div>
     <div class="committee-agent-grid" id="agent-grid">
         {% for p in personas %}
@@ -196,7 +195,7 @@
 <!-- Loading state (streaming) -->
 <div id="committee-loading" style="display:none; text-align:center; padding:32px 40px 16px;">
     <div class="spinner" aria-hidden="true"></div>
-    <p style="margin-top:12px; color:var(--text-muted); font-size:0.82rem;" data-i18n="committee-loading">委员会正在独立审议...</p>
+    <p style="margin-top:12px; color:var(--text-muted); font-size:0.82rem;" data-i18n="committee-loading">The committee is independently deliberating...</p>
     <div class="streaming-progress-bar"><div class="streaming-progress-bar__fill" id="committee-progress-fill"></div></div>
     <div class="streaming-agent-name" id="committee-progress-name"></div>
     <div class="streaming-counter" id="committee-progress-counter"></div>
@@ -204,28 +203,28 @@
 
 <!-- Error state -->
 <div id="committee-error" class="error-panel" style="display:none;" role="alert">
-    <div class="error-panel-title">&#x26A0; <span data-i18n="committee-error-title">分析失败</span></div>
+    <div class="error-panel-title">&#x26A0; <span data-i18n="committee-error-title">Analysis Failed</span></div>
     <div class="error-panel-msg" id="committee-error-msg"></div>
-    <button class="btn btn-sm" onclick="runCommittee()" style="margin-top:8px;" data-i18n="btn-retry">重试</button>
+    <button class="btn btn-sm" onclick="runCommittee()" style="margin-top:8px;" data-i18n="btn-retry">Retry</button>
 </div>
 
 <!-- Streaming opinions (visible while loading) -->
 <div id="committee-stream-opinions" style="display:none; margin-bottom:16px;">
-    <div class="section-title compact mb-12" data-i18n="committee-opinions">各位大师独立意见</div>
+    <div class="section-title compact mb-12" data-i18n="committee-opinions">Independent Opinions of the Masters</div>
     <div class="opinion-list" id="opinion-list"></div>
 </div>
 
 <!-- Results (verdict + re-sorted opinions after done) -->
 <div id="committee-results" style="display:none;">
     <div class="flex items-center justify-between mb-12" style="flex-wrap:wrap; gap:8px;">
-        <div class="section-title compact" data-i18n="committee-verdict">委员会裁决</div>
+        <div class="section-title compact" data-i18n="committee-verdict">Committee Verdict</div>
         <div style="display:flex; gap:8px;">
-            <button type="button" class="btn btn-sm btn-ghost" onclick="copyCommitteeReport()" data-i18n="committee-copy-report">复制报告</button>
-            <button type="button" class="btn btn-sm btn-ghost" onclick="exportCommitteeReport()" data-i18n="committee-export-report">导出报告</button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="copyCommitteeReport()" data-i18n="committee-copy-report">Copy Report</button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="exportCommitteeReport()" data-i18n="committee-export-report">Export Report</button>
         </div>
     </div>
     <div class="verdict-panel mb-20" id="verdict-panel"></div>
-    <div class="section-title compact mb-12" data-i18n="committee-opinions">各位大师独立意见</div>
+    <div class="section-title compact mb-12" data-i18n="committee-opinions">Independent Opinions of the Masters</div>
     <div class="opinion-list" id="opinion-list-final"></div>
 </div>
 
@@ -274,11 +273,11 @@ var _PRESETS = {
     all:    []  // empty = all agents
 };
 var _PRESET_LABELS = {
-    value:  '价值委员会：巴菲特 · 格雷厄姆 · 芒格 · 费雪',
-    china:  '中国价值委员会：段永平 · 张磊 · 李录 · 但斌',
-    macro:  '宏观全天候委员会：达利欧 · 索罗斯 · 霍华德马克斯 · ARPS',
-    growth: '创新成长委员会：凯西伍德 · 蒂尔 · Aschenbrenner · Serenity',
-    all:    '全体委员会：18位大师'
+    value:  'Value Committee: Buffett, Graham, Munger, Fisher',
+    china:  'China Value Committee: Duan Yongping · Zhang Lei · Li Lu · Dan Bin',
+    macro:  'Macro All-Weather Committee: Dalio · Soros · Howard Marks · ARPS',
+    growth: 'Innovation & Growth Committee: Cathie Wood · Thiel · Aschenbrenner · Serenity',
+    all:    'Full Committee: 18 Masters'
 };
 
 function loadPreset(name) {
@@ -313,7 +312,7 @@ function runCommittee() {
     var ticker = document.getElementById('committee-ticker').value.trim().toUpperCase();
     _committeeTicker = ticker;
     var question = document.getElementById('committee-question').value.trim();
-    if (!ticker) { showToast(_t('committee-need-ticker', '请输入股票代码'), 'warning'); return; }
+    if (!ticker) { showToast(_t('committee-need-ticker', 'Please enter the stock ticker'), 'warning'); return; }
 
     // Close any existing WebSocket
     if (_committeeWs) { try { _committeeWs.close(); } catch(e) {} _committeeWs = null; }
@@ -336,7 +335,7 @@ function runCommittee() {
     _committeeWs = ws;
 
     ws.onopen = function() {
-        ws.send(JSON.stringify({ticker: ticker, question: question || ('分析 ' + ticker), agents: agents}));
+        ws.send(JSON.stringify({ticker: ticker, question: question || ('Analyze ' + ticker), agents: agents}));
     };
 
     ws.onmessage = function(ev) {
@@ -365,7 +364,7 @@ function runCommittee() {
             document.getElementById('committee-loading').style.display = 'none';
             document.getElementById('committee-stream-opinions').style.display = 'none';
             document.getElementById('committee-btn').disabled = false;
-            showError(msg.message || _t('committee-error-generic', '分析失败'));
+            showError(msg.message || _t('committee-error-generic', 'Analysis failed, please try again'));
         }
     };
 
@@ -373,7 +372,7 @@ function runCommittee() {
         document.getElementById('committee-loading').style.display = 'none';
         document.getElementById('committee-stream-opinions').style.display = 'none';
         document.getElementById('committee-btn').disabled = false;
-        showError(_t('committee-ws-error', 'WebSocket 连接失败，请重试'));
+        showError(_t('committee-ws-error', 'WebSocket connection failed, please try again'));
     };
 
     ws.onclose = function(ev) {
@@ -381,7 +380,7 @@ function runCommittee() {
             document.getElementById('committee-loading').style.display = 'none';
             document.getElementById('committee-stream-opinions').style.display = 'none';
             document.getElementById('committee-btn').disabled = false;
-            showError(_t('committee-ws-auth', '认证失败，请检查 API Token'));
+            showError(_t('committee-ws-auth', 'Authentication failed, please check the API Token'));
         }
     };
 }

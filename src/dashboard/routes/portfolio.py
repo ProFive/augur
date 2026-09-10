@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""Portfolio risk decomposition API.
+"""Portfolio risk decomposition API (English version).
 
 Decomposes an existing (client-supplied) holdings list into:
   - per-holding variance contribution (Euler decomposition of portfolio
@@ -37,7 +37,7 @@ class PortfolioRiskBody(BaseModel):
     holdings: List[PortfolioHolding]
 
 
-@router.post("/api/portfolio/risk", summary="投资组合风险分解")
+@router.post("/api/portfolio/risk", summary="Portfolio risk decomposition")
 async def api_portfolio_risk(body: PortfolioRiskBody):
     if not body.holdings:
         raise HTTPException(status_code=400, detail="Portfolio has no holdings")

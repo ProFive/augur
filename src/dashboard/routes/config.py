@@ -190,9 +190,9 @@ def _fetch_pinned_quotes(symbols: List[str]) -> List[Dict[str, Any]]:
 
 # ---- Config routes ----
 
-@router.get("/api/config", summary="获取系统配置")
+@router.get("/api/config", summary="Retrieve system configuration")
 async def api_get_config():
-    """返回完整配置（敏感信息脱敏）"""
+    """Return full configuration (sensitive information masked)"""
     config = get_config()
 
     def _mask_sensitive(d, parent_key=""):
@@ -214,19 +214,19 @@ async def api_get_config():
     return _mask_sensitive(config)
 
 
-@router.put("/api/config", summary="更新系统配置")
+@router.put("/api/config", summary="Update system configuration")
 async def api_put_config(body: ConfigUpdateBody):
-    """更新完整配置"""
+    """Update full configuration (sensitive information should be masked in the request)."""
     data = body.dict(exclude_none=True)
     for key, value in data.items():
         set_config(key, value)
     save_config()
-    return {"status": "ok", "message": "配置已更新"}
+    return {"status": "ok", "message": "Configuration updated successfully."}
 
 
-@router.get("/api/config/persona/{agent_id}", summary="获取Agent模型配置")
+@router.get("/api/config/persona/{agent_id}", summary="Retrieve Agent model configuration")
 async def api_get_persona_config(agent_id: str):
-    """获取单个 Agent 的模型配置"""
+    """Retrieve the model configuration for a single Agent"""
     if not re.match(r'^[a-z0-9_-]{1,50}$', agent_id):
         raise HTTPException(
             status_code=400,
@@ -239,12 +239,12 @@ async def api_get_persona_config(agent_id: str):
     return {"agent_id": agent_id, "model": model}
 
 
-@router.put("/api/config/persona/{agent_id}", summary="更新Agent模型配置")
+@router.put("/api/config/persona/{agent_id}", summary="Update Agent model configuration")
 async def api_put_persona_config(agent_id: str, body: PersonaModelBody):
-    """更新单个 Agent 的模型配置"""
+    """Update the model configuration for a single Agent"""
     agent = get_registry().get(agent_id)
     if not agent:
-        raise HTTPException(status_code=404, detail=f"Persona '{agent_id}' not found in registry")
+        raise HTTPException(status_code=404, detail=f"Agent '{agent_id}' not found in registry")
     set_config(f"per_agent.{agent_id}", body.model)
     save_config()
     return {"status": "ok", "agent_id": agent_id, "model": body.model}
@@ -252,7 +252,7 @@ async def api_put_persona_config(agent_id: str, body: PersonaModelBody):
 
 # ---- Home widgets routes ----
 
-@router.get("/api/home/widgets", summary="获取首页小组件配置")
+@router.get("/api/home/widgets", summary="Retrieve home screen widget configuration")
 async def api_get_home_widgets():
     """Return Bloomberg-style home dashboard layout (pinned strip + collapsed panels)."""
     widgets = get_home_widgets()
@@ -266,9 +266,9 @@ async def api_get_home_widgets():
     }
 
 
-@router.put("/api/home/widgets", summary="保存首页小组件配置")
+@router.put("/api/home/widgets", summary="Update home screen widget configuration")
 async def api_put_home_widgets(body: HomeWidgetsBody):
-    """Persist pinned watchlist strip and collapsible panel state."""
+    """Persist pinned watchlist strip and collapsible panel state on the home screen."""
     payload = body.model_dump(exclude_none=True)
     saved = save_home_widgets(payload)
     pinned = _effective_pinned_tickers(saved)
@@ -280,9 +280,9 @@ async def api_put_home_widgets(body: HomeWidgetsBody):
     }
 
 
-@router.get("/api/models", summary="获取可用模型列表")
+@router.get("/api/models", summary="Retrieve available models")
 async def api_get_models():
-    """返回所有可用模型（扁平列表）"""
+    """Return all available models (flat list)"""
     config = get_config()
     available_models = config.get("available_models", {})
     models_flat = []
@@ -294,16 +294,16 @@ async def api_get_models():
 
 # ---- Config export/import/test routes ----
 
-@router.get("/api/config/export", summary="导出配置")
+@router.get("/api/config/export", summary="Export configuration")
 async def api_config_export():
-    """Export full config as JSON for backup/migration."""
+    """Export full configuration as JSON for backup/migration."""
     config = get_config()
     return JSONResponse(content=config)
 
 
-@router.post("/api/config/import", summary="导入配置")
+@router.post("/api/config/import", summary="Import configuration")
 async def api_config_import(request: Request):
-    """Import config from JSON body."""
+    """Import configuration from JSON body."""
     try:
         body = await request.json()
     except Exception:
@@ -311,10 +311,10 @@ async def api_config_import(request: Request):
     for key, value in body.items():
         set_config(key, value)
     save_config()
-    return {"status": "ok", "message": "配置已导入"}
+    return {"status": "ok", "message": "Configuration imported successfully."}
 
 
-@router.post("/api/config/test-datasource", summary="测试数据源连接")
+@router.post("/api/config/test-datasource", summary="Test datasource connection")
 async def api_test_datasource(request: Request):
     """Test datasource connectivity."""
     try:
@@ -328,38 +328,38 @@ async def api_test_datasource(request: Request):
         env_key = os.environ.get("FINNHUB_API_KEY", "")
         api_key = key or env_key
         if not api_key:
-            return {"status": "error", "detail": "未配置 Finnhub API Key"}
+            return {"status": "error", "detail": "Finnhub API Key not configured"}
         try:
             import urllib.request
             url = f"https://finnhub.io/api/v1/stock/profile2?symbol=AAPL&token={api_key}"
             req = urllib.request.Request(url, headers={"User-Agent": "Augur/1.0"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "Finnhub 连接成功"}
+                    return {"status": "ok", "detail": "Finnhub connection successful"}
         except Exception as e:
-            return {"status": "error", "detail": f"连接失败: {e}"}
+            return {"status": "error", "detail": f"Connection failed: {e}"}
     elif source == "alphavantage":
         config = get_config()
         key = (config.get("datasource_keys") or {}).get("alphavantage", "")
         env_key = os.environ.get("ALPHAVANTAGE_API_KEY", "")
         api_key = key or env_key
         if not api_key:
-            return {"status": "error", "detail": "未配置 Alpha Vantage API Key"}
+            return {"status": "error", "detail": "Alpha Vantage API Key not configured"}
         try:
             import urllib.request
             url = f"https://www.alphavantage.co/query?function=GLOBAL_QUOTE&symbol=AAPL&apikey={api_key}"
             req = urllib.request.Request(url, headers={"User-Agent": "Augur/1.0"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "Alpha Vantage 连接成功"}
+                    return {"status": "ok", "detail": "Alpha Vantage connection successful"}
         except Exception as e:
-            return {"status": "error", "detail": f"连接失败: {e}"}
+            return {"status": "error", "detail": f"Connection failed: {e}"}
     else:
-        return {"status": "error", "detail": f"未知数据源: {source}"}
-    return {"status": "error", "detail": "连接测试失败"}
+        return {"status": "error", "detail": f"Unknown datasource: {source}"}
+    return {"status": "error", "detail": "Connection test failed"}
 
 
-@router.post("/api/config/test-notification", summary="测试通知渠道")
+@router.post("/api/config/test-notification", summary="Test notification channel")
 async def api_test_notification(request: Request):
     """Test notification channel connectivity."""
     try:
@@ -374,33 +374,33 @@ async def api_test_notification(request: Request):
         token = notifications.get("telegram_token", "")
         chat_id = notifications.get("telegram_chat_id", "")
         if not token or not chat_id:
-            return {"status": "error", "detail": "请先配置 Telegram Bot Token 和 Chat ID"}
+            return {"status": "error", "detail": "Please configure Telegram Bot Token and Chat ID first"}
         try:
             import urllib.request
             import json as _json
-            msg = "Augur 测试消息: 通知渠道配置成功!"
+            msg = "Augur test message: Notification channel configured successfully!"
             url = f"https://api.telegram.org/bot{token}/sendMessage"
             data = _json.dumps({"chat_id": chat_id, "text": msg}).encode()
             req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "Telegram 测试消息已发送"}
+                    return {"status": "ok", "detail": "Telegram test message sent"}
         except Exception as e:
-            return {"status": "error", "detail": f"发送失败: {e}"}
+            return {"status": "error", "detail": f"Failed to send: {e}"}
     elif channel == "slack":
         webhook = notifications.get("slack_webhook", "")
         if not webhook:
-            return {"status": "error", "detail": "请先配置 Slack Webhook URL"}
+            return {"status": "error", "detail": "Please configure Slack Webhook URL first"}
         try:
             import urllib.request
             import json as _json
-            data = _json.dumps({"text": "Augur 测试消息: Slack 通知渠道配置成功!"}).encode()
+            data = _json.dumps({"text": "Augur test message: Slack notification channel configured successfully!"}).encode()
             req = urllib.request.Request(webhook, data=data, headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "Slack 测试消息已发送"}
+                    return {"status": "ok", "detail": "Slack test message sent"}
         except Exception as e:
-            return {"status": "error", "detail": f"发送失败: {e}"}
+            return {"status": "error", "detail": f"Failed to send: {e}"}
     else:
-        return {"status": "error", "detail": f"不支持的通知渠道: {channel}"}
-    return {"status": "error", "detail": "测试失败"}
+        return {"status": "error", "detail": f"Unsupported notification channel: {channel}"}
+    return {"status": "error", "detail": "Test failed"}

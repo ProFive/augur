@@ -36,7 +36,7 @@ class CronConfigBody(BaseModel):
 
 # ---- Notifications ----
 
-@router.post("/api/notifications/test", summary="发送测试通知")
+@router.post("/api/notifications/test", summary="Send test notification")
 async def api_notifications_test(body: NotificationTestBody):
     """Test notification channel by sending a test message."""
     channel = body.channel.lower()
@@ -50,60 +50,60 @@ async def api_notifications_test(body: NotificationTestBody):
         token = notifications.get("telegram_token", "")
         chat_id = notifications.get("telegram_chat_id", "")
         if not token or not chat_id:
-            return {"status": "error", "detail": "请先配置 Telegram Bot Token 和 Chat ID"}
+            return {"status": "error", "detail": "Please configure Telegram Bot Token and Chat ID first"}
         try:
             from augur.bots.telegram_bot import send_message
-            send_message(token, chat_id, "Augur 测试通知: 通道配置成功!")
-            return {"status": "ok", "detail": "Telegram 测试消息已发送"}
+            send_message(token, chat_id, "Augur test notification: channel configured successfully!")
+            return {"status": "ok", "detail": "Telegram test message sent"}
         except ImportError:
             try:
                 import json as _json
                 import urllib.request
                 url = f"https://api.telegram.org/bot{token}/sendMessage"
-                data = _json.dumps({"chat_id": chat_id, "text": "Augur 测试通知: 通道配置成功!"}).encode()
+                data = _json.dumps({"chat_id": chat_id, "text": "Augur test notification: channel configured successfully!"}).encode()
                 req = urllib.request.Request(url, data=data, headers={"Content-Type": "application/json"})
                 with urllib.request.urlopen(req, timeout=10) as resp:
                     if resp.status == 200:
-                        return {"status": "ok", "detail": "Telegram 测试消息已发送"}
+                        return {"status": "ok", "detail": "Telegram test message sent"}
             except Exception as e:
-                return {"status": "error", "detail": f"发送失败: {e}"}
+                return {"status": "error", "detail": f"Failed to send: {e}"}
         except Exception as e:
-            return {"status": "error", "detail": f"发送失败: {e}"}
+            return {"status": "error", "detail": f"Failed to send: {e}"}
     elif channel == "slack":
         webhook = notifications.get("slack_webhook", "")
         if not webhook:
-            return {"status": "error", "detail": "请先配置 Slack Webhook URL"}
+            return {"status": "error", "detail": "Please configure Slack Webhook URL first"}
         try:
             import json as _json
             import urllib.request
-            data = _json.dumps({"text": "Augur 测试通知: Slack 通道配置成功!"}).encode()
+            data = _json.dumps({"text": "Augur test notification: Slack channel configured successfully!"}).encode()
             req = urllib.request.Request(webhook, data=data, headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "Slack 测试消息已发送"}
+                    return {"status": "ok", "detail": "Slack test message sent"}
         except Exception as e:
-            return {"status": "error", "detail": f"发送失败: {e}"}
+            return {"status": "error", "detail": f"Failed to send: {e}"}
     elif channel == "lark":
         webhook = notifications.get("lark_webhook", "")
         if not webhook:
-            return {"status": "error", "detail": "请先配置飞书 Webhook URL"}
+            return {"status": "error", "detail": "Please configure Lark Webhook URL first"}
         try:
             import json as _json
             import urllib.request
-            data = _json.dumps({"msg_type": "text", "content": {"text": "Augur 测试通知: 飞书通道配置成功!"}}).encode()
+            data = _json.dumps({"msg_type": "text", "content": {"text": "Augur test notification: Lark channel configured successfully!"}}).encode()
             req = urllib.request.Request(webhook, data=data, headers={"Content-Type": "application/json"})
             with urllib.request.urlopen(req, timeout=10) as resp:
                 if resp.status == 200:
-                    return {"status": "ok", "detail": "飞书测试消息已发送"}
+                    return {"status": "ok", "detail": "Lark test message sent"}
         except Exception as e:
-            return {"status": "error", "detail": f"发送失败: {e}"}
+            return {"status": "error", "detail": f"Failed to send: {e}"}
     elif channel == "wechat":
-        return {"status": "error", "detail": "微信通知需要企业微信配置，请参考文档"}
+        return {"status": "error", "detail": "WeChat notifications require Enterprise WeChat configuration, please refer to the documentation"}
 
-    return {"status": "error", "detail": "测试失败"}
+    return {"status": "error", "detail": "Test failed, please check your configuration and network connectivity"}
 
 
-@router.post("/api/notifications/config", summary="保存通知配置")
+@router.post("/api/notifications/config", summary="Save notification configuration")
 async def api_notifications_config_save(request: Request):
     """Save notification configuration to config/notifications.yaml."""
     try:
@@ -115,10 +115,10 @@ async def api_notifications_config_save(request: Request):
     config_file.write_text(yaml.dump(body, allow_unicode=True), encoding="utf-8")
     set_config("notifications", body)
     save_config()
-    return {"status": "ok", "message": "通知配置已保存"}
+    return {"status": "ok", "message": "Notification configuration saved"}
 
 
-@router.get("/api/notifications/config", summary="获取通知配置")
+@router.get("/api/notifications/config", summary="Get notification configuration")
 async def api_notifications_config_get():
     """Read notification configuration."""
     config_file = _CONFIG_DIR / "notifications.yaml"
@@ -134,9 +134,9 @@ async def api_notifications_config_get():
 
 # ---- Cron ----
 
-@router.get("/api/cron/config", summary="获取定时监控配置")
+@router.get("/api/cron/config", summary="Get cron configuration")
 async def api_get_cron_config():
-    """返回当前 cron 配置 (schedule + notifications sections from watchlist.yaml)"""
+    """Return current cron configuration (schedule + notifications sections from watchlist.yaml)"""
     from augur.cron import load_watchlist
     config = load_watchlist()
     return {
@@ -146,9 +146,9 @@ async def api_get_cron_config():
     }
 
 
-@router.put("/api/cron/config", summary="更新定时监控配置")
+@router.put("/api/cron/config", summary="Update cron configuration")
 async def api_put_cron_config(body: CronConfigBody):
-    """更新 schedule/notifications sections in watchlist.yaml"""
+    """Update schedule/notifications sections in watchlist.yaml"""
     from augur.cron import load_watchlist, save_watchlist
     config = load_watchlist()
     if body.schedule is not None:
@@ -158,20 +158,20 @@ async def api_put_cron_config(body: CronConfigBody):
     save_watchlist(config)
     return {
         "status": "ok",
-        "message": "定时监控配置已更新",
+        "message": "Cron configuration updated",
         "schedule": config.get("schedule", {}),
         "notifications": config.get("notifications", {}),
     }
 
 
-@router.post("/api/cron/run-now", summary="立即执行一次监控分析")
+@router.post("/api/cron/run-now", summary="Run cron analysis now")
 def api_cron_run_now():
-    """触发一次 watchlist 分析并返回结果"""
+    """Trigger a watchlist analysis and return the results"""
     from augur.cron import run_watchlist_analysis
     try:
         results = run_watchlist_analysis()
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"分析执行失败: {e}")
+        raise HTTPException(status_code=500, detail=f"Cron analysis failed: {e}")
     serialized = []
     for r in results:
         consensus = r.get("consensus")

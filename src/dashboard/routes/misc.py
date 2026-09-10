@@ -13,7 +13,7 @@ router = APIRouter()
 _STATIC_DIR = Path(__file__).parent.parent / "static"
 
 
-@router.get("/health", summary="健康检查")
+@router.get("/health", summary="Health Check")
 async def health():
     return {"status": "ok", "agents": len(get_registry().get_all())}
 
@@ -46,7 +46,7 @@ async def sitemap_xml():
     return Response(content=xml, media_type="application/xml")
 
 
-@router.get("/api/health", summary="扩展健康检查")
+@router.get("/api/health", summary="Extended Health Check")
 async def api_health_extended():
     """Extended health check - returns datasource reachability, cache info, uptime."""
     datasources = []
@@ -80,7 +80,7 @@ async def api_health_extended():
     }
 
 
-@router.post("/api/cache/clear", summary="清除数据缓存")
+@router.post("/api/cache/clear", summary="Clear Data Cache")
 async def api_cache_clear():
     """Clear the data cache to force fresh fetches."""
     from augur.data import clear_cache
@@ -88,7 +88,7 @@ async def api_cache_clear():
     return {"status": "ok", "message": "Cache cleared"}
 
 
-@router.get("/api/cache/info", summary="缓存状态信息")
+@router.get("/api/cache/info", summary="Cache Status Information")
 async def api_cache_info():
     """Return cache size and TTL info."""
     from augur.data import cache_info

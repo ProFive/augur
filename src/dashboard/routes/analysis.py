@@ -35,9 +35,9 @@ SCANNER_PRESETS = {
 }
 
 
-@router.post("/api/scanner/run", summary="批量扫描标的评分")
+@router.post("/api/scanner/run", summary="Batch scoring of scan targets")
 async def api_scanner_run(body: ScannerRunBody):
-    """批量扫描标的，返回所有大师评分矩阵"""
+    """Batch scan targets and return all master score matrices."""
     tickers = body.tickers
     if body.preset and body.preset in SCANNER_PRESETS:
         tickers = SCANNER_PRESETS[body.preset]
@@ -110,7 +110,7 @@ async def api_scanner_run(body: ScannerRunBody):
 
 # ============ Analyze API ============
 
-@router.get("/api/analyze/{ticker}", summary="分析指定标的")
+@router.get("/api/analyze/{ticker}", summary="Analyze specified target with all enabled personas")
 def analyze_ticker(
     ticker: str,
     price: float = 0,
@@ -132,14 +132,14 @@ def analyze_ticker(
     auto_fetch: bool = True,
 ):
     """
-    使用所有18位投资大师分析指定标的
+    Analyze the specified target with all 18 enabled personas.
 
-    基本用法: GET /api/analyze/AAPL (自动获取实时数据)
-    手动指标: GET /api/analyze/AAPL?price=210&pe=32&gross_margins=0.46
+    Basic usage: GET /api/analyze/AAPL (auto-fetch real-time data)
+    Manual metrics: GET /api/analyze/AAPL?price=210&pe=32&gross_margins=0.46
 
-    同步 def：fetch_market_context 同步调用 yfinance，且 18 位投资大师的
-    分析也是同步执行，async def 会在此期间阻塞事件循环——这正是「投委会」
-    和「深度报告」体验卡死的根因之一。
+    Note: The synchronous fetch_market_context call to yfinance and the analysis
+    by all 18 personas are blocking operations. Using async def will block the
+    event loop during this period, which may cause UI freezes.
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format. Use 1-15 alphanumeric characters, dots, or hyphens.")
@@ -251,7 +251,7 @@ def analyze_ticker(
 
 # ============ Report API ============
 
-@router.get("/api/report/{ticker}", summary="生成深度分析报告")
+@router.get("/api/report/{ticker}", summary="Generate an in-depth analysis report.")
 def report_ticker(
     ticker: str,
     price: float = 0,
@@ -273,13 +273,14 @@ def report_ticker(
     auto_fetch: bool = True,
 ):
     """
-    生成深度分析报告（Markdown格式）
+    Generate an in-depth analysis report (Markdown format).
 
-    基本用法: GET /api/report/AAPL (自动获取实时数据)
-    手动指标: GET /api/report/AAPL?price=210&pe=32&auto_fetch=false
+    Basic usage: GET /api/report/AAPL (auto-fetch real-time data)
+    Manual metrics: GET /api/report/AAPL?price=210&pe=32&auto_fetch=false
 
-    同步 def：fetch_market_context 同步调用 yfinance，且 18 位投资大师的
-    分析也是同步执行，async def 会阻塞事件循环——这是「深度报告」加载卡死的根因之一。
+    Note: The synchronous fetch_market_context call to yfinance and the analysis
+    by all 18 personas are blocking operations. Using async def will block the
+    event loop during this period, which may cause UI freezes.
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format. Use 1-15 alphanumeric characters, dots, or hyphens.")
@@ -350,7 +351,7 @@ def report_ticker(
     }
 
 
-@router.post("/api/report/{ticker}", summary="从已有数据生成报告")
+@router.post("/api/report/{ticker}", summary="Generate report from existing data (avoids re-running agents)")
 async def generate_report_from_data(ticker: str, request: Request):
     """Generate report from pre-computed analysis data (avoids re-running agents)."""
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):

@@ -78,7 +78,7 @@ async def _broadcast_workspace_change(state: dict) -> None:
 
 # ---- REST endpoints ----
 
-@router.get("/api/workspace", summary="获取终端工作区配置")
+@router.get("/api/workspace", summary="Get terminal workspace configuration")
 async def api_get_workspace(request: Request):
     """Return Bloomberg-style terminal workspace preferences."""
     state = get_workspace_state()
@@ -96,19 +96,19 @@ async def api_get_workspace(request: Request):
     return JSONResponse(content=data, headers={"ETag": f'"{etag}"'})
 
 
-@router.get("/api/workspace/presets", summary="列出工作区布局预设")
+@router.get("/api/workspace/presets", summary="List workspace layout presets")
 async def api_workspace_presets():
     """Return available layout presets (analyst, trader, committee, minimal)."""
     return {"status": "ok", "presets": list_presets()}
 
 
-@router.get("/api/workspace/profiles", summary="列出命名工作区配置")
+@router.get("/api/workspace/profiles", summary="List named workspace profiles")
 async def api_list_workspace_profiles():
     """Return all named workspace profiles."""
     return {"status": "ok", "profiles": list_profiles(), "active_profile": get_workspace_state()["active_profile"]}
 
 
-@router.get("/api/workspace/profiles/{profile_name}", summary="获取命名工作区配置详情")
+@router.get("/api/workspace/profiles/{profile_name}", summary="Get named workspace profile details")
 async def api_get_workspace_profile(profile_name: str):
     """Return full workspace settings for a named profile without switching active."""
     slug = normalize_profile_name(profile_name)
@@ -125,7 +125,7 @@ async def api_get_workspace_profile(profile_name: str):
     }
 
 
-@router.put("/api/workspace/profiles/{profile_name}", summary="保存命名工作区配置")
+@router.put("/api/workspace/profiles/{profile_name}", summary="Save named workspace profile")
 async def api_save_workspace_profile(profile_name: str, body: WorkspaceBody):
     """Save settings for a named profile without switching active."""
     slug = normalize_profile_name(profile_name)
@@ -143,7 +143,7 @@ async def api_save_workspace_profile(profile_name: str, body: WorkspaceBody):
     }
 
 
-@router.post("/api/workspace/profiles", summary="创建命名工作区配置")
+@router.post("/api/workspace/profiles", summary="Create named workspace profile")
 async def api_create_workspace_profile(body: WorkspaceProfileBody):
     """Create a new named profile (e.g. day-trading, research)."""
     try:
@@ -153,7 +153,7 @@ async def api_create_workspace_profile(body: WorkspaceProfileBody):
     return {"status": "ok", "profile": body.name.strip().lower(), "workspace": profile}
 
 
-@router.delete("/api/workspace/profiles/{profile_name}", summary="删除命名工作区配置")
+@router.delete("/api/workspace/profiles/{profile_name}", summary="Delete named workspace profile")
 async def api_delete_workspace_profile(profile_name: str):
     """Delete a named profile."""
     try:
@@ -163,7 +163,7 @@ async def api_delete_workspace_profile(profile_name: str):
     return {"status": "ok", "deleted": profile_name.strip().lower()}
 
 
-@router.put("/api/workspace/active", summary="切换活动工作区配置")
+@router.put("/api/workspace/active", summary="Switch active workspace profile")
 async def api_set_active_workspace_profile(body: WorkspaceActiveBody):
     """Switch the active workspace profile."""
     try:
@@ -174,7 +174,7 @@ async def api_set_active_workspace_profile(body: WorkspaceActiveBody):
     return {"status": "ok", "active_profile": body.profile.strip().lower(), "workspace": workspace}
 
 
-@router.put("/api/workspace", summary="保存终端工作区配置")
+@router.put("/api/workspace", summary="Save terminal workspace configuration")
 async def api_put_workspace(body: WorkspaceBody):
     """Save workspace layout preferences to ~/.augur/workspace.yaml."""
     data = body.model_dump(exclude_none=True)
@@ -183,13 +183,13 @@ async def api_put_workspace(body: WorkspaceBody):
     return {"status": "ok", "workspace": saved, "active_profile": get_workspace_state()["active_profile"]}
 
 
-@router.get("/api/workspace/export", summary="导出工作区配置")
+@router.get("/api/workspace/export", summary="Export workspace configuration")
 async def api_workspace_export():
     """Export all workspace profiles for backup (also embedded in /api/config/export)."""
     return {"status": "ok", WORKSPACE_EXPORT_KEY: export_workspace_bundle()}
 
 
-@router.post("/api/workspace/import", summary="导入工作区配置")
+@router.post("/api/workspace/import", summary="Import workspace configuration")
 async def api_workspace_import(request: Request):
     """Import workspace profiles from export payload or full config JSON."""
     try:

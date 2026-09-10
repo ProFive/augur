@@ -41,7 +41,7 @@ async def api_optimize(body: OptimizeBody):
     from augur.optimizer import PortfolioOptimizer
     import random
     if not body.tickers or len(body.tickers) > 10:
-        raise HTTPException(status_code=400, detail="需要1-10个股票代码")
+        raise HTTPException(status_code=400, detail="Requires 1–10 stock tickers.")
     for t in body.tickers:
         if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', t):
             raise HTTPException(status_code=400, detail=f"Invalid ticker: {t}")
@@ -125,26 +125,26 @@ async def api_optimize(body: OptimizeBody):
 
 @router.get("/api/i18n/{lang}")
 async def api_i18n(lang: str):
-    if lang not in ("en", "zh"):
-        raise HTTPException(status_code=400, detail="Supported languages: en, zh")
+    if lang not in ("en", "vi", "zh"):
+        raise HTTPException(status_code=400, detail="Supported languages: en, vi, zh")
     filepath = _I18N_DIR / f"{lang}.json"
     if not filepath.exists():
         raise HTTPException(status_code=404, detail=f"Language file not found: {lang}")
     try:
         data = json.loads(filepath.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"翻译文件格式错误: {e}")
+        raise HTTPException(status_code=500, detail=f"Translation file format error: {e}")
     except UnicodeDecodeError as e:
-        raise HTTPException(status_code=500, detail=f"翻译文件编码错误: {e}")
+        raise HTTPException(status_code=500, detail=f"Translation file encoding error: {e}")
     except OSError as e:
-        raise HTTPException(status_code=500, detail=f"翻译文件读取失败: {e}")
+        raise HTTPException(status_code=500, detail=f"Translation file read error: {e}")
     return data
 
 
 @router.post("/api/lang/{lang}")
 async def api_set_lang(lang: str):
-    if lang not in ("en", "zh"):
-        raise HTTPException(status_code=400, detail="Supported languages: en, zh")
+    if lang not in ("en", "vi", "zh"):
+        raise HTTPException(status_code=400, detail="Supported languages: en, vi, zh")
     response = JSONResponse(content={"status": "ok", "lang": lang})
     response.set_cookie(key="augur_lang", value=lang, max_age=365 * 24 * 3600, httponly=False, samesite="lax")
     return response

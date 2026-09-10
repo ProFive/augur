@@ -35,11 +35,11 @@ def _safe_float(value) -> float:
 
 # ---- Ticker fetch / search / sparkline ----
 
-@router.get("/api/fetch/{ticker}", summary="获取实时行情数据")
+@router.get("/api/fetch/{ticker}", summary="Fetch real-time market data for a ticker")
 def api_fetch_ticker(ticker: str):
     """Fetch real-time market data for a ticker via yfinance.
 
-    同步 def：fetch_market_context 同步调用 yfinance，async def 会阻塞事件循环。
+    Synchronous def: fetch_market_context calls yfinance synchronously, async def will block the event loop.
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(
@@ -67,11 +67,11 @@ def api_fetch_ticker(ticker: str):
         raise HTTPException(status_code=500, detail=f"Failed to fetch data: {e}")
 
 
-@router.get("/api/search", summary="搜索标的")
+@router.get("/api/search", summary="Search for tickers by name/symbol")
 def api_search_tickers(q: str = ""):
     """Search for tickers by name/symbol.
 
-    同步 def：search_ticker 同步调用 yfinance，async def 会阻塞事件循环。
+    Synchronous def: search_ticker calls yfinance synchronously, async def will block the event loop.
     """
     if not q or len(q) < 1:
         return {"results": []}
@@ -93,12 +93,12 @@ def api_search_tickers(q: str = ""):
         raise HTTPException(status_code=500, detail=f"Search failed: {e}")
 
 
-@router.get("/api/sparkline/{ticker}", summary="获取7日迷你走势数据")
+@router.get("/api/sparkline/{ticker}", summary="Get 7-day mini sparkline data for a ticker")
 def api_sparkline(ticker: str):
-    """Return last 7 trading days close prices for sparkline rendering.
+    """Return last 7 trading days close prices for sparkline rendering. 
 
-    同步 def：fetch_history 在缓存未命中时同步调用 yfinance，
-    async def 会阻塞事件循环——首页一次要并发渲染多个标的的迷你走势图。
+    synchronous def: fetch_history calls yfinance synchronously on cache miss, 
+    async def will block the event loop - the homepage needs to render mini-charts of multiple targets concurrently at one time. 
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format")
@@ -116,14 +116,14 @@ def api_sparkline(ticker: str):
 
 # ---- Home dashboard market feeds ----
 
-@router.get("/api/hot-tickers", summary="热门标的实时行情")
+@router.get("/api/hot-tickers", summary="Real-time market data for hot tickers")
 def api_hot_tickers(request: Request, refresh: bool = False):
-    """热门标的实时行情：AAPL, NVDA, TSLA, MSFT, GOOGL, AMZN, BTC-USD, ETH-USD, META, AMD。
+    """Real-time market data for hot tickers: AAPL, NVDA, TSLA, MSFT, GOOGL, AMZN, BTC-USD, ETH-USD, META, AMD.
 
-    供首页「热门标的实时行情」面板使用。无 yfinance 时优雅降级为空列表。
+    Used by the "Hot Tickers" panel on the homepage. Gracefully degrades to an empty list if yfinance is not available.
 
-    同步 def：fetch_hot_tickers 在缓存未命中时会同步调用 yfinance，
-    声明为 async def 会让那次阻塞 I/O 卡住整个事件循环。
+    Synchronous def: fetch_hot_tickers will synchronously call yfinance if the cache is missed,
+    declaring it as async def will block the event loop during that I/O operation.
     """
     try:
         if not _HAS_AUGUR_DATA:
@@ -148,14 +148,14 @@ def api_hot_tickers(request: Request, refresh: bool = False):
         return {"status": "error", "tickers": [], "error": str(e)}
 
 
-@router.get("/api/market-overview", summary="全球市场总览")
+@router.get("/api/market-overview", summary="Global Market Overview")
 def api_market_overview(request: Request, refresh: bool = False):
-    """市场总览快照：主要指数、VIX、利率、商品、加密的实时价与涨跌幅。
+    """Snapshot of the global market: major indices, VIX, interest rates, commodities, and crypto real-time prices and changes.
 
-    供首页 Dashboard 的「全球市场总览」板块使用。无 yfinance 时优雅降级为空列表。
+    Used by the "Global Market Overview" panel on the homepage dashboard. Gracefully degrades to an empty list if yfinance is not available.
 
-    同步 def：fetch_market_overview 在缓存未命中时同步调用 yfinance，
-    async def 会阻塞事件循环。
+    Synchronous def: fetch_market_overview will synchronously call yfinance if the cache is missed,
+    declaring it as async def will block the event loop during that I/O operation.
     """
     if not _HAS_AUGUR_DATA:
         return {
@@ -163,7 +163,7 @@ def api_market_overview(request: Request, refresh: bool = False):
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "items": [],
             "source": "none",
-            "note": "yfinance 未安装，市场总览不可用。安装: pip install 'augur-agents[data]'",
+            "note": "yfinance is not installed, global market overview is unavailable. Install: pip install 'augur-agents[data]'",
         }
     try:
         from augur.data import fetch_market_overview
@@ -184,16 +184,16 @@ def api_market_overview(request: Request, refresh: bool = False):
             "as_of": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
             "items": [],
             "source": "none",
-            "note": f"市场总览获取失败: {e}",
+            "note": f"Failed to fetch global market overview: {e}",
         }
 
 
-@router.get("/api/market-movers", summary="涨跌幅领先")
+@router.get("/api/market-movers", summary="Top Market Movers")
 def api_market_movers():
     """Top 5 gainers and top 5 losers extracted from hot tickers data.
 
-    同步 def：fetch_hot_tickers 在缓存未命中时同步调用 yfinance，
-    async def 会阻塞事件循环。
+    Synchronous def: fetch_hot_tickers will synchronously call yfinance if the cache is missed,
+    declaring it as async def will block the event loop during that I/O operation.
     """
     if not _HAS_AUGUR_DATA:
         return {"status": "degraded", "gainers": [], "losers": []}
@@ -211,13 +211,13 @@ def api_market_movers():
         return {"status": "degraded", "gainers": [], "losers": [], "error": str(e)}
 
 
-@router.get("/api/crypto-overview", summary="加密货币总览")
+@router.get("/api/crypto-overview", summary="Crypto Overview")
 def api_crypto_overview():
     """Fetch BTC, ETH, SOL, DOGE, XRP prices and 24h change from yfinance.
 
-    同步 def：内部已用 ThreadPoolExecutor + future.result(timeout) 抓取多个标的，
-    若声明为 async def，future.result() 仍会阻塞事件循环本身；改成 def 后
-    Starlette 会把整个函数丢进线程池执行，事件循环不受影响。
+    Synchronous def: internally uses ThreadPoolExecutor + future.result(timeout) to fetch multiple tickers,
+    declaring it as async def will still block the event loop during future.result(); by using def,
+    Starlette will execute the entire function in a thread pool, leaving the event loop unaffected.
     """
     if not _HAS_AUGUR_DATA:
         return {"status": "degraded", "coins": []}
@@ -281,9 +281,9 @@ def api_crypto_overview():
     return {"status": "ok", "coins": coins}
 
 
-@router.get("/api/commodities", summary="大宗商品行情")
+@router.get("/api/commodities", summary="Commodities Overview")
 def api_commodities():
-    """Fetch Gold, Silver, Oil (WTI), Natural Gas prices and changes from yfinance."""
+    """Fetch Gold, Silver, Oil (WTI), and Natural Gas prices and changes from yfinance."""
     if not _HAS_AUGUR_DATA:
         return {"status": "degraded", "commodities": []}
 
@@ -338,9 +338,9 @@ def api_commodities():
     return {"status": "ok", "commodities": commodities}
 
 
-@router.get("/api/treasury-rates", summary="美国国债收益率")
+@router.get("/api/treasury-rates", summary="US Treasury Rates")
 def api_treasury_rates():
-    """Fetch US 2Y, 5Y, 10Y, 30Y treasury yields from yfinance."""
+    """Fetch US 2Y, 5Y, 10Y, and 30Y treasury yields from yfinance."""
     if not _HAS_AUGUR_DATA:
         return {"status": "degraded", "rates": []}
 
@@ -392,15 +392,15 @@ def api_treasury_rates():
     return {"status": "ok", "rates": rates}
 
 
-@router.get("/api/fear-greed", summary="恐慌与贪婪指数")
+@router.get("/api/fear-greed", summary="Fear & Greed Index")
 def api_fear_greed():
-    """基于 VIX 计算恐慌与贪婪指数 (0-100)。
+    """Calculate the Fear & Greed Index (0-100) based on the VIX.
 
-    公式: index = max(0, min(100, 100 - ((VIX - 12) / 38) * 100))
+    Formula: index = max(0, min(100, 100 - ((VIX - 12) / 38) * 100))
     0-25: Extreme Fear, 25-45: Fear, 45-55: Neutral, 55-75: Greed, 75-100: Extreme Greed
 
-    同步 def：fetch_market_overview 在缓存未命中时同步调用 yfinance，
-    async def 会阻塞事件循环。
+    Synchronous def: fetch_market_overview will synchronously call yfinance if the cache is missed,
+    declaring it as async def will block the event loop during that I/O operation.
     """
     if not _HAS_AUGUR_DATA:
         return {
@@ -408,7 +408,7 @@ def api_fear_greed():
             "index": 50,
             "label": "Neutral",
             "vix_value": 0.0,
-            "description": "yfinance 未安装，无法计算实时恐慌贪婪指数",
+            "description": "yfinance is not installed, unable to calculate the real-time Fear & Greed Index",
         }
     try:
         from augur.data import fetch_market_overview
@@ -416,54 +416,54 @@ def api_fear_greed():
         items = overview.get("items", [])
         vix_item = next((it for it in items if it.get("key") == "vix"), None)
         if not vix_item or not vix_item.get("price"):
-            return {"status": "degraded", "index": 50, "label": "Neutral", "vix_value": 0.0, "description": "VIX 数据暂时不可用"}
+            return {"status": "degraded", "index": 50, "label": "Neutral", "vix_value": 0.0, "description": "VIX data temporarily unavailable"}
         vix_val = float(vix_item["price"])
         index = max(0, min(100, int(100 - ((vix_val - 12) / 38) * 100)))
         if index >= 75:
-            label, desc = "Extreme Greed", f"VIX={vix_val:.2f}，市场处于极度贪婪状态，波动率极低"
+            label, desc = "Extreme Greed", f"VIX={vix_val:.2f}, the market is in extreme greed, volatility is very low"
         elif index >= 55:
-            label, desc = "Greed", f"VIX={vix_val:.2f}，市场偏贪婪，投资者情绪乐观"
+            label, desc = "Greed", f"VIX={vix_val:.2f}, the market is leaning towards greed, investor sentiment is optimistic"
         elif index >= 45:
-            label, desc = "Neutral", f"VIX={vix_val:.2f}，市场情绪中性"
+            label, desc = "Neutral", f"VIX={vix_val:.2f}, the market sentiment is neutral, investors are cautious"
         elif index >= 25:
-            label, desc = "Fear", f"VIX={vix_val:.2f}，市场偏恐慌，投资者趋于谨慎"
+            label, desc = "Fear", f"VIX={vix_val:.2f}, the market is leaning towards fear, investors are cautious"
         else:
-            label, desc = "Extreme Fear", f"VIX={vix_val:.2f}，市场处于极度恐慌状态，波动率极高"
+            label, desc = "Extreme Fear", f"VIX={vix_val:.2f}, the market is in extreme fear, volatility is very high"
         return {"status": "ok", "index": index, "label": label, "vix_value": vix_val, "description": desc}
     except Exception as e:
         logger.warning("fear-greed calc failed: %s", e)
-        return {"status": "degraded", "index": 50, "label": "Neutral", "vix_value": 0.0, "description": f"恐慌贪婪指数计算失败: {e}"}
+        return {"status": "degraded", "index": 50, "label": "Neutral", "vix_value": 0.0, "description": f"Fear & Greed Index calculation failed: {e}"}
 
 
-@router.get("/api/datasources", summary="数据源状态")
+@router.get("/api/datasources", summary="Data source status")
 async def api_datasources():
-    """返回当前可用的数据源链（用于 UI 展示数据来源覆盖情况）。"""
+    """Return the currently available data source chains (for UI display of data source coverage)."""
     try:
         from augur.datasources import available_sources
         sources = available_sources()
     except Exception:
         sources = ["yfinance", "stooq"]
     catalog = {
-        "yfinance": {"label": "Yahoo Finance", "needs_key": False, "coverage": "行情+基本面+技术指标", "active": "yfinance" in sources},
-        "finnhub": {"label": "Finnhub", "needs_key": True, "coverage": "基本面+分析师评级", "active": "finnhub" in sources, "env": "FINNHUB_API_KEY"},
-        "alphavantage": {"label": "Alpha Vantage", "needs_key": True, "coverage": "基本面 OVERVIEW", "active": "alphavantage" in sources, "env": "ALPHAVANTAGE_API_KEY"},
-        "stooq": {"label": "Stooq", "needs_key": False, "coverage": "行情兜底 (CSV)", "active": "stooq" in sources},
+        "yfinance": {"label": "Yahoo Finance", "needs_key": False, "coverage": "Market data + Fundamentals + Technical indicators", "active": "yfinance" in sources},
+        "finnhub": {"label": "Finnhub", "needs_key": True, "coverage": "Fundamentals + Analyst ratings", "active": "finnhub" in sources, "env": "FINNHUB_API_KEY"},
+        "alphavantage": {"label": "Alpha Vantage", "needs_key": True, "coverage": "Fundamentals OVERVIEW", "active": "alphavantage" in sources, "env": "ALPHAVANTAGE_API_KEY"},
+        "stooq": {"label": "Stooq", "needs_key": False, "coverage": "Market data fallback (CSV)", "active": "stooq" in sources},
     }
     return {"status": "ok", "active_chain": sources, "catalog": catalog}
 
 
-@router.get("/api/sector-performance", summary="板块行情")
+@router.get("/api/sector-performance", summary="Sector performance for major ETFs")
 def api_sector_performance(request: Request, refresh: bool = False):
-    """板块ETF行情：XLK, XLV, XLF, XLE, XLY, XLP, XLI, XLU。
+    """Sector ETF performance: XLK, XLV, XLF, XLE, XLY, XLP, XLI, XLU.
 
-    供首页「板块行情」面板使用。无 yfinance 时优雅降级为空列表。
+    Used for the "Sector Performance" panel on the homepage. Gracefully degrades to an empty list if yfinance is not available.
 
-    同步 def（非 async def）：Starlette 会自动把它丢进线程池执行，
-    不会阻塞事件循环。内部用 ThreadPoolExecutor 并行抓取 11 个 ETF，
-    每个标的最多等待 10 秒，避免单个标的卡住拖慢整体响应。
+    Synchronous def (not async def): Starlette will automatically run it in a thread pool,
+    so it won't block the event loop. Internally uses ThreadPoolExecutor to fetch 11 ETFs in parallel,
+    each with a maximum wait time of 10 seconds to avoid a single ETF slowing down the overall response.
     """
     if not _HAS_AUGUR_DATA:
-        return {"status": "degraded", "sectors": [], "note": "yfinance 未安装，板块行情不可用。"}
+        return {"status": "degraded", "sectors": [], "note": "yfinance is not installed, sector performance is unavailable."}
 
     sector_etfs = [
         ("XLK", "科技", "Technology"),
@@ -532,7 +532,7 @@ def api_sector_performance(request: Request, refresh: bool = False):
             return JSONResponse(status_code=304, content=None, headers={"ETag": f'"{etag}"'})
         return JSONResponse(content=data, headers={"ETag": f'"{etag}"'})
     except ImportError:
-        return {"status": "degraded", "sectors": [], "note": "yfinance 未安装，板块行情不可用。"}
+        return {"status": "degraded", "sectors": [], "note": "yfinance is not installed; sector market data is unavailable."}
     except Exception as e:
         logger.warning("sector performance failed: %s", e)
-        return {"status": "degraded", "sectors": [], "note": f"板块行情获取失败: {e}"}
+        return {"status": "degraded", "sectors": [], "note": f"Failed to fetch sector market data: {e}"}

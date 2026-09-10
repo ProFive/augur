@@ -78,9 +78,9 @@ async def chat_page(request: Request):
 @router.post("/api/chat")
 async def api_chat(body: ChatBody):
     if not body.message or not body.message.strip():
-        raise HTTPException(status_code=400, detail="消息不能为空")
+        raise HTTPException(status_code=400, detail="The message cannot be empty.")
     if len(body.message) > 2000:
-        raise HTTPException(status_code=400, detail="消息过长（最多2000字符）")
+        raise HTTPException(status_code=400, detail="The message is too long (maximum 2000 characters).")
     if body.agent_id and not re.match(r'^[a-z_]{1,50}$', body.agent_id):
         raise HTTPException(status_code=400, detail="Invalid agent_id format")
     try:
@@ -91,4 +91,4 @@ async def api_chat(body: ChatBody):
         raise HTTPException(status_code=400, detail=f"Invalid chat request: {e}")
     except Exception as e:
         logger.warning("chat engine failed: %s", e)
-        raise HTTPException(status_code=500, detail=f"聊天服务暂时不可用: {e}")
+        raise HTTPException(status_code=500, detail=f"The chat service is temporarily unavailable: {e}")

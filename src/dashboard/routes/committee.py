@@ -35,35 +35,35 @@ class DebateBody(BaseModel):
 
 @router.get("/compare", response_class=HTMLResponse)
 async def compare_page(request: Request):
-    ctx = {"title": "大师对决", "personas": _persona_meta()}
+    ctx = {"title": "Master Showdown", "personas": _persona_meta()}
     ctx.update(_i18n_context(request=request))
     return templates.TemplateResponse(request=request, name="compare.html", context=ctx)
 
 
 @router.get("/debate", response_class=HTMLResponse)
 async def debate_page(request: Request):
-    ctx = {"title": "投资辩论", "personas": _persona_meta()}
+    ctx = {"title": "Investment Debate", "personas": _persona_meta()}
     ctx.update(_i18n_context(request=request))
     return templates.TemplateResponse(request=request, name="debate.html", context=ctx)
 
 
 @router.get("/hermes-setup", response_class=HTMLResponse)
 async def hermes_setup_page(request: Request):
-    ctx = {"title": "Hermes Agent 接入指南"}
+    ctx = {"title": "Hermes Agent Integration Guide"}
     ctx.update(_i18n_context(request=request))
     return templates.TemplateResponse(request=request, name="hermes_setup.html", context=ctx)
 
 
 @router.get("/committee", response_class=HTMLResponse)
 async def committee_page(request: Request):
-    ctx = {"title": "投资委员会", "personas": _persona_meta()}
+    ctx = {"title": "Investment Committee", "personas": _persona_meta()}
     ctx.update(_i18n_context(request=request))
     return templates.TemplateResponse(request=request, name="committee.html", context=ctx)
 
 
 @router.get("/performance", response_class=HTMLResponse)
 async def performance_page(request: Request):
-    ctx = {"title": "大师排行榜"}
+    ctx = {"title": "Master Leaderboard - Performance"}
     ctx.update(_i18n_context(request=request))
     return templates.TemplateResponse(request=request, name="performance.html", context=ctx)
 
@@ -72,8 +72,9 @@ async def performance_page(request: Request):
 def api_committee(body: dict):
     """Run an investment committee session with selected masters.
 
-    同步 def：fetch_market_context 同步调用 yfinance，且全部投资人的 analyze()
-    也是同步执行，async def 会阻塞事件循环——这是「投委会」体验卡死的根因之一。
+    Synchronous def: fetch_market_context synchronously calls yfinance, and all agents' analyze()
+    are also executed synchronously. Using async def will block the event loop — this is one of the main reasons
+    why the "Investment Committee" experience can freeze.
     """
     ticker = body.get("ticker", "").upper()
     question = body.get("question", "")
@@ -166,7 +167,8 @@ def api_committee(body: dict):
 
 @router.post("/api/compare")
 def api_compare(body: CompareBody):
-    """同步 def：fetch_market_context 同步调用 yfinance，async def 会阻塞事件循环。"""
+    """Synchronous def: fetch_market_context synchronously calls yfinance, and all agents' analyze()
+    are also executed synchronously. Using async def will block the event loop."""
     if not consume_endpoint_token("api_compare"):
         raise HTTPException(
             status_code=429,
@@ -176,9 +178,9 @@ def api_compare(body: CompareBody):
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format")
     if len(body.agent_ids) < 2 or len(body.agent_ids) > 5:
-        raise HTTPException(status_code=400, detail="需要2-5个投资人")
+        raise HTTPException(status_code=400, detail="Require 2-5 agents")
     if len(body.agent_ids) != len(set(body.agent_ids)):
-        raise HTTPException(status_code=400, detail="投资人不能重复")
+        raise HTTPException(status_code=400, detail="Agents cannot be duplicated")
     registry = get_registry()
     for aid in body.agent_ids:
         if not registry.get(aid):
@@ -201,7 +203,8 @@ def api_compare(body: CompareBody):
 
 @router.post("/api/debate")
 def api_debate(body: DebateBody):
-    """同步 def：fetch_market_context 同步调用 yfinance，async def 会阻塞事件循环。"""
+    """Synchronous def: fetch_market_context synchronously calls yfinance, and all agents' analyze()
+    are also executed synchronously. Using async def will block the event loop."""
     if not consume_endpoint_token("api_debate"):
         raise HTTPException(
             status_code=429,
@@ -211,9 +214,9 @@ def api_debate(body: DebateBody):
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format")
     if len(body.agent_ids) < 2 or len(body.agent_ids) > 4:
-        raise HTTPException(status_code=400, detail="需要2-4个投资人")
+        raise HTTPException(status_code=400, detail="Require 2-4 agents")
     if len(body.agent_ids) != len(set(body.agent_ids)):
-        raise HTTPException(status_code=400, detail="投资人不能重复")
+        raise HTTPException(status_code=400, detail="Agents cannot be duplicated")
     registry = get_registry()
     for aid in body.agent_ids:
         if not registry.get(aid):
@@ -231,7 +234,7 @@ def api_debate(body: DebateBody):
             result = agent.analyze(ctx)
             reasoning = result.reasoning or ""
             if i > 0 and previous_reasoning:
-                reasoning = f"[对前者观点的回应] {reasoning}"
+                reasoning = f"[Response to the previous agent's viewpoint] {reasoning}"
             rounds.append({"agent_id": aid, "agent_name": result.agent_name, "signal": result.signal.value, "score": round(result.score, 1), "confidence": round(result.confidence, 2), "reasoning": reasoning, "round": i + 1})
             previous_reasoning = result.reasoning or ""
         except Exception as e:
@@ -240,9 +243,9 @@ def api_debate(body: DebateBody):
     buy_count = sum(1 for s in signals if s == "bullish")
     sell_count = sum(1 for s in signals if s == "bearish")
     if buy_count > sell_count:
-        summary = f"辩论结束: {buy_count}/{len(signals)} 位投资人看多 {ticker}。"
+        summary = f"Debate concluded: {buy_count}/{len(signals)} agents are bullish on {ticker}."
     elif sell_count > buy_count:
-        summary = f"辩论结束: {sell_count}/{len(signals)} 位投资人看空 {ticker}。"
+        summary = f"Debate concluded: {sell_count}/{len(signals)} agents are bearish on {ticker}."
     else:
-        summary = f"辩论结束: 投资人对 {ticker} 分歧较大，建议多维度分析。"
+        summary = f"Debate concluded: agents are divided on {ticker}, consider a multi-faceted analysis."
     return {"ticker": ticker, "rounds": rounds, "summary": summary, "timestamp": datetime.utcnow().isoformat() + "Z"}

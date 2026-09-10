@@ -52,16 +52,16 @@ async def register_page(request: Request):
 
 # ---- Auth API ----
 
-@router.get("/api/auth/config", summary="获取认证配置")
+@router.get("/api/auth/config", summary="Retrieve authentication configuration")
 async def api_auth_config():
     """Return whether auth is enabled and which credential types are accepted."""
     from augur.auth import get_auth_config
     return {"status": "ok", **get_auth_config()}
 
 
-@router.get("/api/auth/verify", summary="验证API Token")
+@router.get("/api/auth/verify", summary="Verify API Token")
 async def api_auth_verify(request: Request):
-    """验证 API Token 或 JWT 有效性。未启用认证时返回 open 模式。"""
+    """Verify the validity of the API Token or JWT. Returns open mode if auth is not enabled."""
     if not auth_required():
         return {"status": "ok", "authenticated": True, "mode": "open"}
     ok, mode = authenticate_request(request)
@@ -78,7 +78,7 @@ async def api_auth_verify(request: Request):
     return {"status": "ok", "authenticated": True, "mode": mode}
 
 
-@router.get("/api/auth/me", summary="获取当前登录用户")
+@router.get("/api/auth/me", summary="Get current logged-in user")
 async def api_auth_me(request: Request):
     """Return the authenticated multi-user JWT identity."""
     from augur.users import is_multi_user_enabled
@@ -128,18 +128,18 @@ async def api_auth_login(body: AuthLoginBody, request: Request):
     return {"status": "ok", "token": token, "username": body.username}
 
 
-@router.get("/api/schema/persona", summary="获取Persona YAML结构")
+@router.get("/api/schema/persona", summary="Retrieve Persona YAML schema")
 async def api_persona_schema():
-    """返回 Persona YAML 结构描述"""
+    """Return the Persona YAML schema."""
     return {
         "type": "object",
         "properties": {
-            "agent_id": {"type": "string", "description": "唯一标识符"},
-            "name": {"type": "string", "description": "显示名称"},
-            "identity": {"type": "string", "description": "人格身份描述"},
-            "philosophy": {"type": "array", "items": {"type": "string"}, "description": "投资哲学要点"},
-            "scoring_weights": {"type": "object", "description": "评分权重 (维度 -> 0-1)"},
-            "model": {"type": "string", "description": "使用的 LLM 模型"},
+            "agent_id": {"type": "string", "description": "Unique identifier"},
+            "name": {"type": "string", "description": "Display name"},
+            "identity": {"type": "string", "description": "Persona identity description"},
+            "philosophy": {"type": "array", "items": {"type": "string"}, "description": "Key investment philosophy points"},
+            "scoring_weights": {"type": "object", "description": "Scoring weights (dimension -> 0-1)"},
+            "model": {"type": "string", "description": "LLM model used for this persona (optional)"},
         },
         "required": ["agent_id", "name", "identity"],
     }

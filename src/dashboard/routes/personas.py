@@ -27,24 +27,24 @@ router = APIRouter()
 # ---- Persona enrichment metadata ----
 
 PERSONA_ENRICHMENT = {
-    "buffett": {"cn_name": "沃伦·巴菲特", "en_name": "Warren Buffett", "school": "value", "core_principles": ["护城河决定长期价值", "只买看得懂的生意", "别人恐惧时贪婪"], "holdings": ["BRK.B", "AAPL", "KO", "AXP"]},
-    "graham": {"cn_name": "本杰明·格雷厄姆", "en_name": "Benjamin Graham", "school": "value", "core_principles": ["安全边际是投资的基石", "市场先生情绪无常", "买入低于净资产的股票"], "holdings": ["GEICO", "BRK.B"]},
-    "munger": {"cn_name": "查理·芒格", "en_name": "Charlie Munger", "school": "value", "core_principles": ["多元思维模型", "用合理价格买优质企业", "避免愚蠢比追求聪明更重要"], "holdings": ["BRK.B", "COST", "BAC"]},
-    "fisher": {"cn_name": "菲利普·费雪", "en_name": "Philip Fisher", "school": "growth", "core_principles": ["成长股的真正价值在管理层", "闲聊法深入调研", "长期持有优质成长股"], "holdings": ["MOTOROLA", "TXN"]},
-    "lynch": {"cn_name": "彼得·林奇", "en_name": "Peter Lynch", "school": "growth", "core_principles": ["在生活中发现十倍股", "PEG是成长股估值核心", "分散但集中于了解的领域"], "holdings": ["SBUX", "FNM"]},
-    "cathie_wood": {"cn_name": "凯瑟琳·伍德", "en_name": "Cathie Wood", "school": "growth", "core_principles": ["颠覆性创新创造指数级增长", "5年投资视野", "拥抱波动性"], "holdings": ["TSLA", "COIN", "ROKU", "SQ"]},
-    "aschenbrenner": {"cn_name": "利奥波德·阿申布伦纳", "en_name": "Leopold Aschenbrenner", "school": "growth", "core_principles": ["AI超级周期即将到来", "算力是新石油", "AGI将重塑所有行业"], "holdings": ["NVDA", "MSFT", "GOOGL"]},
-    "thiel": {"cn_name": "彼得·蒂尔", "en_name": "Peter Thiel", "school": "growth", "core_principles": ["垄断企业才有真正价值", "从0到1比从1到N更重要", "逆向思维发现秘密"], "holdings": ["PLTR", "META", "TSLA"]},
-    "dalio": {"cn_name": "瑞·达利欧", "en_name": "Ray Dalio", "school": "macro", "core_principles": ["理解债务周期驱动一切", "全天候组合应对不确定性", "激进透明与原则决策"], "holdings": ["SPY", "GLD", "TLT"]},
-    "soros": {"cn_name": "乔治·索罗斯", "en_name": "George Soros", "school": "macro", "core_principles": ["反身性：认知影响现实", "先开枪后瞄准", "发现市场错误定价"], "holdings": ["MACRO_BETS"]},
-    "marks": {"cn_name": "霍华德·马克斯", "en_name": "Howard Marks", "school": "macro", "core_principles": ["周期是投资中最确定的事", "风险来自过高的价格", "逆向投资需要勇气"], "holdings": ["OAK", "HY_BONDS"]},
-    "serenity": {"cn_name": "宁静", "en_name": "Serenity", "school": "quant", "core_principles": ["波动率是可以管理的风险", "尾部风险对冲保护本金", "系统化消除情绪干扰"], "holdings": ["VIX_HEDGE", "OPTIONS"]},
-    "arps": {"cn_name": "马丁·阿普斯", "en_name": "Martin Arps", "school": "quant", "core_principles": ["价格包含一切信息", "趋势是你的朋友", "量价背离是最强信号"], "holdings": ["TECH_MOMENTUM"]},
-    "dayu": {"cn_name": "大宇", "en_name": "Dayu", "school": "quant", "core_principles": ["量化模型消除主观偏见", "资金流向揭示主力意图", "统计套利寻找确定性"], "holdings": ["A_SHARES"]},
-    "duan_yongping": {"cn_name": "段永平", "en_name": "Duan Yongping", "school": "china", "core_principles": ["做对的事，停止做错的事", "商业模式比什么都重要", "极度集中持仓"], "holdings": ["AAPL", "PDD", "BABA"]},
-    "zhang_lei": {"cn_name": "张磊", "en_name": "Zhang Lei", "school": "china", "core_principles": ["长期结构性价值创造", "研究驱动投资", "与伟大企业共同成长"], "holdings": ["PDD", "JD", "BYD"]},
-    "li_lu": {"cn_name": "李录", "en_name": "Li Lu", "school": "china", "core_principles": ["价值投资在中国同样适用", "理解文明的演化", "集中投资少数确定机会"], "holdings": ["BRK.B", "BYD", "BABA"]},
-    "dan_bin": {"cn_name": "但斌", "en_name": "Dan Bin", "school": "china", "core_principles": ["时间的玫瑰：长期主义", "消费龙头是最佳赛道", "长坡厚雪复利惊人"], "holdings": ["600519.SS", "AAPL", "MOUTAI"]},
+    "buffett": {"cn_name": "沃伦·巴菲特", "en_name": "Warren Buffett", "school": "value", "core_principles": ["Economic moats determine long-term value", "Only buy businesses you understand", "Be greedy when others are fearful."], "holdings": ["BRK.B", "AAPL", "KO", "AXP"]},
+    "graham": {"cn_name": "本杰明·格雷厄姆", "en_name": "Benjamin Graham", "school": "value", "core_principles": ["Margin of safety is the cornerstone of investing", "Mr. Market is moody", "Buy stocks below net asset value"], "holdings": ["GEICO", "BRK.B"]},
+    "munger": {"cn_name": "查理·芒格", "en_name": "Charlie Munger", "school": "value", "core_principles": ["Multiple mental models", "Buy quality businesses at reasonable prices", "Avoiding stupidity is more important than seeking brilliance"], "holdings": ["BRK.B", "COST", "BAC"]},
+    "fisher": {"cn_name": "菲利普·费雪", "en_name": "Philip Fisher", "school": "growth", "core_principles": ["The real value of growth stocks lies in management", "Deep research through casual conversations", "Hold high-quality growth stocks for the long term"], "holdings": ["MOTOROLA", "TXN"]},
+    "lynch": {"cn_name": "彼得·林奇", "en_name": "Peter Lynch", "school": "growth", "core_principles": ["Find tenbaggers in everyday life", "PEG is the core of growth stock valuation", "Diversify but focus on what you understand"], "holdings": ["SBUX", "FNM"]},
+    "cathie_wood": {"cn_name": "凯瑟琳·伍德", "en_name": "Cathie Wood", "school": "growth", "core_principles": ["Disruptive innovation creates exponential growth", "5-year investment horizon", "Embrace volatility"], "holdings": ["TSLA", "COIN", "ROKU", "SQ"]},
+    "aschenbrenner": {"cn_name": "利奥波德·阿申布伦纳", "en_name": "Leopold Aschenbrenner", "school": "growth", "core_principles": ["The AI supercycle is coming", "Computing power is the new oil", "AGI will reshape all industries"], "holdings": ["NVDA", "MSFT", "GOOGL"]},
+    "thiel": {"cn_name": "彼得·蒂尔", "en_name": "Peter Thiel", "school": "growth", "core_principles": ["Only monopoly companies have real value", "Going from 0 to 1 is more important than from 1 to N", "Discover secrets through contrarian thinking"], "holdings": ["PLTR", "META", "TSLA"]},
+    "dalio": {"cn_name": "瑞·达利欧", "en_name": "Ray Dalio", "school": "macro", "core_principles": ["Understand that the debt cycle drives everything", "All-weather portfolio to cope with uncertainty", "Radical transparency and principled decision-making"], "holdings": ["SPY", "GLD", "TLT"]},
+    "soros": {"cn_name": "乔治·索罗斯", "en_name": "George Soros", "school": "macro", "core_principles": ["Reflexivity: cognition affects reality", "Shoot first, aim later", "Identify market mispricings"], "holdings": ["MACRO_BETS"]},
+    "marks": {"cn_name": "霍华德·马克斯", "en_name": "Howard Marks", "school": "macro", "core_principles": ["Cycles are the most certain thing in investing", "Risk comes from overpricing", "Contrarian investing requires courage"], "holdings": ["OAK", "HY_BONDS"]},
+    "serenity": {"cn_name": "宁静", "en_name": "Serenity", "school": "quant", "core_principles": ["Volatility is a manageable risk", "Tail risk hedging protects capital", "Systematically eliminate emotional interference"], "holdings": ["VIX_HEDGE", "OPTIONS"]},
+    "arps": {"cn_name": "马丁·阿普斯", "en_name": "Martin Arps", "school": "quant", "core_principles": ["Prices contain all information", "The trend is your friend", "Volume-price divergence is the strongest signal"], "holdings": ["TECH_MOMENTUM"]},
+    "dayu": {"cn_name": "大宇", "en_name": "Dayu", "school": "quant", "core_principles": ["Quantitative models eliminate subjective bias", "Capital flows reveal the intentions of major players", "Statistical arbitrage seeks certainty"], "holdings": ["A_SHARES"]},
+    "duan_yongping": {"cn_name": "段永平", "en_name": "Duan Yongping", "school": "china", "core_principles": ["Do the right thing, stop doing the wrong thing", "Business model is more important than anything", "Extremely concentrated holdings"], "holdings": ["AAPL", "PDD", "BABA"]},
+    "zhang_lei": {"cn_name": "张磊", "en_name": "Zhang Lei", "school": "china", "core_principles": ["Long-term structural value creation", "Research-driven investment", "Grow together with great companies"], "holdings": ["PDD", "JD", "BYD"]},
+    "li_lu": {"cn_name": "李录", "en_name": "Li Lu", "school": "china", "core_principles": ["Value investing is equally applicable in China", "Understand the evolution of civilization", "Concentrate investment in a few certain opportunities"], "holdings": ["BRK.B", "BYD", "BABA"]},
+    "dan_bin": {"cn_name": "但斌", "en_name": "Dan Bin", "school": "china", "core_principles": ["The rose of time: long-termism", "Consumer leaders are the best track", "Long slopes and thick snow compound interest is amazing"], "holdings": ["600519.SS", "AAPL", "MOUTAI"]},
 }
 
 
@@ -83,7 +83,7 @@ def _persona_meta() -> List[Dict]:
                 else enrichment.get("en_name", agent.name).split()[-1]
             ),
             "is_custom": is_custom,
-            "quote": agent.philosophy[0] if agent.philosophy else "投资，就是投未来。",
+            "quote": agent.philosophy[0] if agent.philosophy else "Investing is investing in the future.",
             "model": per_agent.get(agent.agent_id, default_model),
         })
     return meta
@@ -99,9 +99,9 @@ class CustomPersonaBody(BaseModel):
 
 # ---- Routes ----
 
-@router.get("/api/personas", summary="获取所有投资人列表")
+@router.get("/api/personas", summary="Get a list of all investors.")
 async def list_personas():
-    """返回所有投资人人格列表"""
+    """Return a list of all investor personas."""
     registry = get_registry()
     return {
         "status": "ok",
@@ -110,12 +110,12 @@ async def list_personas():
     }
 
 
-@router.get("/api/persona/compare", summary="对比两位投资大师对同一标的的观点")
+@router.get("/api/persona/compare", summary="Compare the views of two investors on the same target")
 def compare_personas(persona1: str, persona2: str, ticker: str):
     """
-    对比两位投资大师对同一标的的分析观点。
+    Compare the analysis views of two investors on the same target.
 
-    同步 def：fetch_market_context 同步调用 yfinance，async def 会阻塞事件循环。
+    Note: fetch_market_context is a synchronous function that calls yfinance synchronously. Using async def would block the event loop.
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format. Use 1-15 alphanumeric characters, dots, or hyphens.")
@@ -174,21 +174,21 @@ def compare_personas(persona1: str, persona2: str, ticker: str):
     }
 
 
-@router.get("/api/persona/{agent_id}", summary="获取单个投资人详情")
+@router.get("/api/persona/{agent_id}", summary="Get details of a single investor")
 async def get_persona(agent_id: str):
-    """获取单个投资人的详细信息"""
+    """Get detailed information of a single investor"""
     agent = get_registry().get(agent_id)
     if not agent:
         raise HTTPException(status_code=404, detail=f"Persona '{agent_id}' not found")
     return agent.to_dict()
 
 
-@router.get("/api/persona/{agent_id}/opinion", summary="获取单个投资人对标的的分析观点")
+@router.get("/api/persona/{agent_id}/opinion", summary="Get a single investor's analysis on a target")
 def get_persona_opinion(agent_id: str, ticker: str, question: Optional[str] = None):
     """
-    使用单个投资大师分析指定标的，返回其独立观点。
+    Use a single investor to analyze the specified target and return their independent view.
 
-    同步 def：fetch_market_context 同步调用 yfinance，async def 会阻塞事件循环。
+    Note: fetch_market_context is a synchronous function that calls yfinance synchronously. Using async def would block the event loop.
     """
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
         raise HTTPException(status_code=400, detail="Invalid ticker format. Use 1-15 alphanumeric characters, dots, or hyphens.")
@@ -230,9 +230,9 @@ def get_persona_opinion(agent_id: str, ticker: str, question: Optional[str] = No
     }
 
 
-@router.post("/api/custom-persona", summary="创建自定义投资人")
+@router.post("/api/custom-persona", summary="Create a custom investor")
 async def api_create_custom_persona(body: CustomPersonaBody):
-    """保存自定义 Persona YAML 到 personas/custom/"""
+    """Save custom Persona YAML to personas/custom/"""
     if not re.match(r'^[a-z0-9_-]+$', body.agent_id):
         raise HTTPException(
             status_code=400,
@@ -264,9 +264,9 @@ async def api_create_custom_persona(body: CustomPersonaBody):
     return {"status": "ok", "path": str(filepath), "hot_loaded": True}
 
 
-@router.get("/api/custom-personas", summary="列出所有自定义投资人")
+@router.get("/api/custom-personas", summary="List all custom investors")
 async def api_list_custom_personas():
-    """列出 personas/custom/ 目录下的所有自定义投资人"""
+    """List all custom investors in the personas/custom/ directory"""
     custom_dir = Path(__file__).parent.parent.parent / "personas" / "custom"
     custom_dir.mkdir(parents=True, exist_ok=True)
     personas = []
@@ -287,9 +287,9 @@ async def api_list_custom_personas():
     return {"status": "ok", "personas": personas}
 
 
-@router.delete("/api/custom-persona/{agent_id}", summary="删除自定义投资人")
+@router.delete("/api/custom-persona/{agent_id}", summary="Delete a custom investor")
 async def api_delete_custom_persona(agent_id: str):
-    """删除 personas/custom/ 下的自定义投资人 YAML 并从注册表注销"""
+    """Delete the custom investor YAML in personas/custom/ and unregister from the registry"""
     if not re.match(r'^[a-z0-9_-]+$', agent_id):
         raise HTTPException(status_code=400, detail="Invalid agent_id format")
     custom_dir = Path(__file__).parent.parent.parent / "personas" / "custom"
@@ -304,12 +304,12 @@ async def api_delete_custom_persona(agent_id: str):
                 _deps._coordinator = None
             except Exception:
                 pass
-    return {"status": "ok", "agent_id": agent_id, "message": "已删除"}
+    return {"status": "ok", "agent_id": agent_id, "message": "Deleted custom persona and unregistered from registry."}
 
 
-@router.put("/api/custom-persona/{agent_id}", summary="更新自定义投资人")
+@router.put("/api/custom-persona/{agent_id}", summary="Update a custom investor")
 async def api_update_custom_persona(agent_id: str, body: CustomPersonaBody):
-    """更新已有的自定义投资人 YAML，热重载"""
+    """Update an existing custom investor YAML and hot reload into the registry"""
     if not re.match(r'^[a-z0-9_-]+$', agent_id):
         raise HTTPException(status_code=400, detail="Invalid agent_id format")
     custom_dir = Path(__file__).parent.parent.parent / "personas" / "custom"

@@ -30,7 +30,7 @@ class WatchlistAddBody(BaseModel):
     price: Optional[float] = None
 
 
-@router.get("/api/watchlist", summary="获取自选股列表")
+@router.get("/api/watchlist", summary="Retrieve watchlist")
 async def api_get_watchlist():
     """Get current watchlist from ~/.augur/watchlist.yaml"""
     from augur.cron import load_watchlist
@@ -44,7 +44,7 @@ async def api_get_watchlist():
             "watchlist": [],
             "schedule": {},
             "error": "watchlist_unavailable",
-            "message": f"自选股文件读取失败: {e}",
+            "message": f"Failed to read watchlist file: {e}",
         }
     return {
         "watchlist": config.get("watchlist", []),
@@ -52,7 +52,7 @@ async def api_get_watchlist():
     }
 
 
-@router.post("/api/watchlist/add", summary="添加自选股")
+@router.post("/api/watchlist/add", summary="Add to watchlist")
 async def api_add_to_watchlist(body: WatchlistAddBody):
     """Add ticker to watchlist"""
     from augur.cron import add_to_watchlist
@@ -68,15 +68,15 @@ async def api_add_to_watchlist(body: WatchlistAddBody):
     try:
         config = add_to_watchlist(body.ticker.upper(), metrics if metrics else None)
     except PermissionError as e:
-        raise HTTPException(status_code=403, detail=f"无写入权限: {e}")
+        raise HTTPException(status_code=403, detail=f"No write permission: {e}")
     except OSError as e:
-        raise HTTPException(status_code=500, detail=f"写入自选股失败: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to write to watchlist: {e}")
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"添加自选股失败: {e}")
+        raise HTTPException(status_code=500, detail=f"Failed to add to watchlist: {e}")
     return {"status": "ok", "ticker": body.ticker.upper(), "watchlist": config.get("watchlist", [])}
 
 
-@router.delete("/api/watchlist/{ticker}", summary="删除自选股")
+@router.delete("/api/watchlist/{ticker}", summary="Remove from watchlist")
 async def api_remove_from_watchlist(ticker: str):
     """Remove ticker from watchlist"""
     if not re.match(r'^[A-Za-z0-9.\-]{1,15}$', ticker):
@@ -88,15 +88,15 @@ async def api_remove_from_watchlist(ticker: str):
     removed = remove_from_watchlist(ticker.upper())
     if not removed:
         raise HTTPException(status_code=404, detail=f"Ticker '{ticker.upper()}' not found in watchlist")
-    return {"status": "ok", "ticker": ticker.upper(), "message": "已从自选股移除"}
+    return {"status": "ok", "ticker": ticker.upper(), "message": "Removed from watchlist"}
 
 
-@router.post("/api/watchlist/run", summary="批量分析自选股")
+@router.post("/api/watchlist/run", summary="Run watchlist analysis")
 def api_run_watchlist_analysis():
     """Run consensus analysis on all watchlist tickers
 
-    同步 def：对自选股列表里的每个标的都要跑全部投资大师的同步分析，
-    标的多时累积耗时不短，async def 会阻塞事件循环。
+    Synchronous def: Runs all enabled personas' analysis on each watchlist ticker.
+    Can be time-consuming for large watchlists; async def would block the event loop.
     """
     import time
     from augur.cron import load_watchlist
@@ -106,7 +106,7 @@ def api_run_watchlist_analysis():
     watchlist = config.get("watchlist", [])
 
     if not watchlist:
-        return {"status": "empty", "message": "自选股列表为空", "results": []}
+        return {"status": "empty", "message": "Watchlist is empty", "results": []}
 
     coordinator = get_coordinator()
     all_results = []
