@@ -124,8 +124,8 @@
 
 <header class="page-header mb-16">
     <div class="page-header__text">
-        <h1 class="page-title" data-i18n="portfolio-title">持仓管理</h1>
-        <p class="page-lead" data-i18n="portfolio-desc">跟踪您的投资组合，实时盈亏计算与 Augur 大师分析</p>
+        <h1 class="page-title" data-i18n="portfolio-title">Position Management</h1>
+        <p class="page-lead" data-i18n="portfolio-desc">Track your portfolio, real-time P&L calculation and Augur master analysis</p>
     </div>
 </header>
 
@@ -133,22 +133,22 @@
 <div class="card mb-24">
     <div class="portfolio-header">
         <div class="portfolio-add-form">
-            <label for="pf-ticker" class="sr-only" data-i18n="portfolio-ticker-ph">代码</label>
-            <input id="pf-ticker" type="text" class="form-input" data-i18n="portfolio-ticker-ph" placeholder="代码" title="Stock ticker">
-            <label for="pf-price" class="sr-only" data-i18n="portfolio-price-ph">买入价</label>
-            <input id="pf-price" type="number" class="form-input" data-i18n="portfolio-price-ph" placeholder="买入价" step="0.01" min="0">
-            <label for="pf-qty" class="sr-only" data-i18n="portfolio-qty-ph">数量</label>
-            <input id="pf-qty" type="number" class="form-input" data-i18n="portfolio-qty-ph" placeholder="数量" step="1" min="1">
-            <label for="pf-date" class="sr-only" data-i18n="portfolio-date-label">买入日期</label>
+            <label for="pf-ticker" class="sr-only" data-i18n="portfolio-ticker-ph">Code</label>
+            <input id="pf-ticker" type="text" class="form-input" data-i18n="portfolio-ticker-ph" placeholder="Code" title="Stock ticker">
+            <label for="pf-price" class="sr-only" data-i18n="portfolio-price-ph">Buy Price</label>
+            <input id="pf-price" type="number" class="form-input" data-i18n="portfolio-price-ph" placeholder="Buy Price" step="0.01" min="0">
+            <label for="pf-qty" class="sr-only" data-i18n="portfolio-qty-ph">Quantity</label>
+            <input id="pf-qty" type="number" class="form-input" data-i18n="portfolio-qty-ph" placeholder="Quantity" step="1" min="1">
+            <label for="pf-date" class="sr-only" data-i18n="portfolio-date-label">Buy Date</label>
             <input id="pf-date" type="date" class="form-input" style="width:140px;" aria-label="Buy date">
-            <button type="button" class="btn btn-primary" onclick="addHolding()" data-i18n="portfolio-add">添加</button>
-            <button type="button" class="btn btn-sm btn-ghost" onclick="importFromWatchlist()" id="pf-import-btn" data-i18n="portfolio-import-btn">导入</button>
+            <button type="button" class="btn btn-primary" onclick="addHolding()" data-i18n="portfolio-add">Add</button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="importFromWatchlist()" id="pf-import-btn" data-i18n="portfolio-import-btn">Import</button>
         </div>
         <div class="flex gap-8">
-            <button type="button" class="btn btn-sm" onclick="runAugurAnalysis()" id="pf-analyze-btn" aria-busy="false">&#x1F9E0; <span data-i18n="portfolio-analyze">Augur 分析</span></button>
-            <button type="button" class="btn btn-sm" onclick="runRiskDecomposition()" id="pf-risk-btn" aria-busy="false">&#x1F4CA; <span data-i18n="portfolio-risk-btn">风险分解</span></button>
-            <button type="button" class="btn btn-sm btn-ghost" onclick="exportPortfolioCSV()" data-i18n="portfolio-export-csv">导出 CSV</button>
-            <button type="button" class="btn btn-sm btn-ghost" onclick="clearPortfolio()" data-i18n="portfolio-clear">清空</button>
+            <button type="button" class="btn btn-sm" onclick="runAugurAnalysis()" id="pf-analyze-btn" aria-busy="false">&#x1F9E0; <span data-i18n="portfolio-analyze">Augur Analysis</span></button>
+            <button type="button" class="btn btn-sm" onclick="runRiskDecomposition()" id="pf-risk-btn" aria-busy="false">&#x1F4CA; <span data-i18n="portfolio-risk-btn">Risk Decomposition</span></button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="exportPortfolioCSV()" data-i18n="portfolio-export-csv">Export CSV</button>
+            <button type="button" class="btn btn-sm btn-ghost" onclick="clearPortfolio()" data-i18n="portfolio-clear">Clear</button>
         </div>
     </div>
 </div>
@@ -157,75 +157,75 @@
 <div class="portfolio-summary" id="pf-summary">
     <div class="card summary-card">
         <div class="data-value" id="sum-invested">--</div>
-        <div class="data-label" data-i18n="portfolio-invested">总投入</div>
+        <div class="data-label" data-i18n="portfolio-invested">Total Invested</div>
     </div>
     <div class="card summary-card">
         <div class="data-value" id="sum-current">--</div>
-        <div class="data-label" data-i18n="portfolio-current">当前市值</div>
+        <div class="data-label" data-i18n="portfolio-current">Current Value</div>
     </div>
     <div class="card summary-card">
         <div class="data-value" id="sum-pnl">--</div>
-        <div class="data-label" data-i18n="portfolio-pnl">总盈亏</div>
+        <div class="data-label" data-i18n="portfolio-pnl">Total P&L</div>
     </div>
     <div class="card summary-card">
         <div class="data-value" id="sum-return">--</div>
-        <div class="data-label" data-i18n="portfolio-return">总收益率</div>
+        <div class="data-label" data-i18n="portfolio-return">Total Return</div>
     </div>
 </div>
 
 <!-- Holdings Table -->
 <div class="card mb-24 md-table-wrap" id="pf-table-card">
     <table class="holdings-table" id="holdings-table">
-        <caption class="sr-only" data-i18n="portfolio-title">持仓管理</caption>
+        <caption class="sr-only" data-i18n="portfolio-title">Holdings Management</caption>
         <thead>
             <tr>
-                <th data-col="ticker" onclick="sortTable('ticker')"><span data-i18n="portfolio-col-ticker">标的</span> <span class="sort-arrow"></span></th>
-                <th data-col="cost" onclick="sortTable('cost')"><span data-i18n="portfolio-col-cost">成本</span> <span class="sort-arrow"></span></th>
-                <th data-col="current" onclick="sortTable('current')"><span data-i18n="portfolio-col-current">现价</span> <span class="sort-arrow"></span></th>
-                <th data-col="pnl" onclick="sortTable('pnl')"><span data-i18n="portfolio-col-pnl">盈亏</span> <span class="sort-arrow"></span></th>
-                <th data-col="pnl_pct" onclick="sortTable('pnl_pct')"><span data-i18n="portfolio-col-return">收益率</span> <span class="sort-arrow"></span></th>
-                <th data-col="days" onclick="sortTable('days')"><span data-i18n="portfolio-col-days">持仓天数</span> <span class="sort-arrow"></span></th>
-                <th data-col="score" onclick="sortTable('score')"><span data-i18n="portfolio-col-score">评分</span> <span class="sort-arrow"></span></th>
-                <th data-i18n="portfolio-col-actions">操作</th>
+                <th data-col="ticker" onclick="sortTable('ticker')"><span data-i18n="portfolio-col-ticker">Ticker</span> <span class="sort-arrow"></span></th>
+                <th data-col="cost" onclick="sortTable('cost')"><span data-i18n="portfolio-col-cost">Cost</span> <span class="sort-arrow"></span></th>
+                <th data-col="current" onclick="sortTable('current')"><span data-i18n="portfolio-col-current">Current</span> <span class="sort-arrow"></span></th>
+                <th data-col="pnl" onclick="sortTable('pnl')"><span data-i18n="portfolio-col-pnl">P&L</span> <span class="sort-arrow"></span></th>
+                <th data-col="pnl_pct" onclick="sortTable('pnl_pct')"><span data-i18n="portfolio-col-return">Return</span> <span class="sort-arrow"></span></th>
+                <th data-col="days" onclick="sortTable('days')"><span data-i18n="portfolio-col-days">Days Held</span> <span class="sort-arrow"></span></th>
+                <th data-col="score" onclick="sortTable('score')"><span data-i18n="portfolio-col-score">Score</span> <span class="sort-arrow"></span></th>
+                <th data-i18n="portfolio-col-actions">Actions</th>
             </tr>
         </thead>
         <tbody id="holdings-body"></tbody>
     </table>
-    <p class="table-scroll-hint" data-i18n="table-scroll-hint">左右滑动查看完整表格</p>
+    <p class="table-scroll-hint" data-i18n="table-scroll-hint">Swipe left or right to view the full table.</p>
 </div>
 
 <!-- Empty State -->
 <div class="empty-state card" id="pf-empty" style="display:none;">
     <span class="empty-state-icon">&#x1F4BC;</span>
-    <div class="empty-state-title" data-i18n="portfolio-empty-title">暂无持仓</div>
-    <p class="empty-state-desc" data-i18n="portfolio-empty-desc">在上方输入股票代码、买入价和数量来添加持仓</p>
+    <div class="empty-state-title" data-i18n="portfolio-empty-title">No Holdings</div>
+    <p class="empty-state-desc" data-i18n="portfolio-empty-desc">Enter the stock ticker, purchase price, and quantity above to add holdings</p>
     <div class="empty-state-action">
-        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('pf-ticker').focus()" data-i18n="portfolio-empty-cta">添加第一笔持仓</button>
-        <a href="/watchlist?to=portfolio" class="btn btn-sm btn-ghost" style="text-decoration:none;" data-i18n="portfolio-empty-watchlist">从自选股导入</a>
+        <button type="button" class="btn btn-primary btn-sm" onclick="document.getElementById('pf-ticker').focus()" data-i18n="portfolio-empty-cta">Add First Holding</button>
+        <a href="/watchlist?to=portfolio" class="btn btn-sm btn-ghost" style="text-decoration:none;" data-i18n="portfolio-empty-watchlist">Import from Watchlist</a>
     </div>
 </div>
 
 <!-- Charts Section -->
 <div class="chart-section" id="pf-charts" style="display:none;">
     <div class="card chart-card">
-        <h4 data-i18n="portfolio-chart-nav">7日组合净值曲线</h4>
+        <h4 data-i18n="portfolio-chart-nav">7-Day Portfolio Net Value Curve</h4>
         <div id="pf-line-chart"></div>
     </div>
     <div class="card chart-card">
-        <h4 data-i18n="portfolio-chart-alloc">资产配置</h4>
+        <h4 data-i18n="portfolio-chart-alloc">Asset Allocation</h4>
         <div id="pf-donut-chart" style="display:flex; align-items:center; justify-content:center;"></div>
     </div>
 </div>
 
 <!-- Augur Analysis Results -->
 <div id="pf-analysis-results" style="display:none;" class="card mb-24">
-    <div class="section-title spaced" data-i18n="portfolio-analysis-title">Augur 大师评分</div>
+    <div class="section-title spaced" data-i18n="portfolio-analysis-title">Augur Analysis</div>
     <div id="pf-analysis-content"></div>
 </div>
 
 <!-- Risk Decomposition Results -->
 <div id="pf-risk-results" style="display:none;" class="card mb-24">
-    <div class="section-title spaced" data-i18n="portfolio-risk-title">风险分解</div>
+    <div class="section-title spaced" data-i18n="portfolio-risk-title">Risk Decomposition</div>
     <div id="pf-risk-content"></div>
 </div>
 
@@ -316,7 +316,7 @@ function clearPortfolio() {
 
 function exportPortfolioCSV() {
     var list = getPortfolio();
-    if (!list.length) { showToast(_t('portfolio-export-empty', '持仓列表为空'), 'warning'); return; }
+    if (!list.length) { showToast(_t('portfolio-export-empty', 'No holdings available'), 'warning'); return; }
     var headers = ['Ticker', 'Shares', 'Avg Cost', 'Current Price', 'Market Value', 'P&L', 'P&L %', 'Buy Date'];
     var rows = list.map(function(h) {
         var mv = (h.currentPrice || 0) * (h.shares || 0);
@@ -342,7 +342,7 @@ function exportPortfolioCSV() {
     a.download = 'augur-portfolio-' + new Date().toISOString().slice(0, 10) + '.csv';
     a.click();
     URL.revokeObjectURL(url);
-    showToast(_t('portfolio-export-done', 'CSV 已下载'), 'success');
+    showToast(_t('portfolio-export-done', 'CSV Downloaded'), 'success');
 }
 
 function fetchCurrentPrice(ticker) {
@@ -741,26 +741,26 @@ function renderRiskDecomposition(data) {
     var p = data.portfolio;
     var summaryHtml = '<div class="portfolio-summary" style="margin-bottom:16px;">' +
         '<div class="card summary-card"><div class="data-value">' + p.volatility_annual_pct.toFixed(1) + '%</div>' +
-        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-vol', '年化波动率')) + '</div></div>' +
+        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-vol', 'Annualized volatility')) + '</div></div>' +
         '<div class="card summary-card"><div class="data-value">' + p.beta.toFixed(2) + '</div>' +
-        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-beta', '组合 Beta')) + '</div></div>' +
+        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-beta', 'Portfolio Beta')) + '</div></div>' +
         '<div class="card summary-card"><div class="data-value">' + p.diversification.effective_n_weight.toFixed(1) + '</div>' +
-        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-effn-weight', '有效持仓数(按权重)')) + '</div></div>' +
+        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-effn-weight', 'Effective Number of Holdings (by Weight)')) + '</div></div>' +
         '<div class="card summary-card"><div class="data-value">' + p.diversification.effective_n_risk.toFixed(1) + '</div>' +
-        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-effn-risk', '有效持仓数(按风险)')) + '</div></div>' +
+        '<div class="data-label">' + escapeHtml(_t('portfolio-risk-effn-risk', 'Effective Number of Holdings (by Risk)')) + '</div></div>' +
         '</div>';
 
     var tableHtml = '<div class="md-table-wrap"><table class="md-table" style="width:100%;"><caption class="sr-only">' +
-        escapeHtml(_t('portfolio-risk-title', '风险分解')) + '</caption><thead><tr>' +
+        escapeHtml(_t('portfolio-risk-title', 'Risk Decomposition')) + '</caption><thead><tr>' +
         '<th scope="col">' + escapeHtml(_t('portfolio-col-ticker')) + '</th>' +
-        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-weight', '仓位权重')) + '</th>' +
-        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-contrib', '风险贡献')) + '</th>' +
+        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-weight', 'Position weight')) + '</th>' +
+        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-contrib', 'Risk Contribution')) + '</th>' +
         '<th scope="col">Beta</th>' +
-        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-sector', '行业')) + '</th>' +
+        '<th scope="col">' + escapeHtml(_t('portfolio-risk-col-sector', 'Industry')) + '</th>' +
         '</tr></thead><tbody>';
     data.holdings.forEach(function(h) {
         var flag = h.risk_contribution_pct > h.weight_pct + 5
-            ? ' <span title="' + escapeHtml(_t('portfolio-risk-overweight', '风险贡献显著高于仓位权重')) + '" style="color:var(--signal-sell); font-size:0.7rem;">&#9650;</span>'
+            ? ' <span title="' + escapeHtml(_t('portfolio-risk-overweight', 'Risk contribution significantly exceeds position weight')) + '" style="color:var(--signal-sell); font-size:0.7rem;">&#9650;</span>'
             : '';
         tableHtml += '<tr>' +
             '<td style="font-weight:600; font-family:var(--font-data);">' + escapeHtml(h.ticker) + '</td>' +
@@ -773,7 +773,7 @@ function renderRiskDecomposition(data) {
     tableHtml += '</tbody></table></div><p class="table-scroll-hint">' + escapeHtml(_t('table-scroll-hint')) + '</p>';
 
     var sectorHtml = '<div style="margin-top:16px;"><h4 style="font-size:0.82rem; color:var(--text-muted); margin-bottom:8px; text-transform:uppercase;">' +
-        escapeHtml(_t('portfolio-risk-sector-title', '行业集中度')) + '</h4>';
+        escapeHtml(_t('portfolio-risk-sector-title', 'Industry Concentration')) + '</h4>';
     data.sector_concentration.forEach(function(s) {
         sectorHtml += '<div style="display:flex; align-items:center; gap:8px; margin-bottom:4px; font-size:0.78rem;">' +
             '<div style="width:120px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;">' + escapeHtml(s.sector) + '</div>' +

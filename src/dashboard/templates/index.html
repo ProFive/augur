@@ -389,11 +389,11 @@
 <div class="onboard-banner" id="onboard-banner" style="display:none;" role="region" aria-labelledby="onboard-title">
     <span class="onboard-icon">&#x1F44B;</span>
     <div class="onboard-body">
-        <div class="onboard-title" id="onboard-title" data-i18n="onboard-title">欢迎使用 Augur — 你的 18 位 AI 投资大师智囊团</div>
-        <div class="onboard-desc" data-i18n="onboard-desc">只需输入一个股票代码（如 AAPL），系统会自动获取实时财务数据，让 18 位大师从各自视角独立打分，并形成共识买/卖/持建议。无需手动填写任何财务指标。下方点一下示例即可立即体验 ↓</div>
-        <button class="btn btn-sm onboard-cta" type="button" onclick="tryExample('AAPL')" data-i18n="onboard-try-aapl">立即体验 AAPL</button>
+        <div class="onboard-title" id="onboard-title" data-i18n="onboard-title">Welcome to Augur — Your Brain Trust of 18 AI Investment Masters</div>
+        <div class="onboard-desc" data-i18n="onboard-desc">Simply enter a stock ticker (e.g., AAPL), and the system will automatically fetch real-time financial data, allowing 18 masters to independently score from their perspectives and form a consensus buy/sell/hold recommendation. No manual input of financial metrics is required. Click the example below to try it out immediately ↓</div>
+        <button class="btn btn-sm onboard-cta" type="button" onclick="tryExample('AAPL')" data-i18n="onboard-try-aapl">Try AAPL Now</button>
     </div>
-    <button class="onboard-close" onclick="dismissOnboard()" data-i18n-title="onboard-close-aria" title="不再显示" data-i18n-aria="onboard-close-aria" aria-label="关闭引导">&times;</button>
+    <button class="onboard-close" onclick="dismissOnboard()" data-i18n-title="onboard-close-aria" title="Do not show again" data-i18n-aria="onboard-close-aria" aria-label="Close onboarding">&times;</button>
 </div>
 
 <!-- Status Bar -->
@@ -438,7 +438,7 @@
     <img src="/static/images/augur-owl-128.png" class="pixelated hero-owl" width="92" height="92" alt=""/>
     <div class="hero-eyebrow">▸ AI Investment Oracle</div>
     <h1 class="hero-title">Summon your council of <span>18 masters</span></h1>
-    <p class="hero-sub" data-i18n="hero-subtitle">输入股票代码，一键获得18位大师共识</p>
+    <p class="hero-sub" data-i18n="hero-subtitle">Enter a stock ticker to get the consensus of 18 masters instantly</p>
     
     <div class="hero-input">
         <input class="field mono" id="hero-ticker" type="text"
@@ -454,9 +454,9 @@
         </button>
     </div>
     
-    <p class="hero-examples-hint" style="margin-top:12px; font-size:0.75rem; color:var(--text-muted);" data-i18n="hero-examples-hint">💡 第一次用？点下面任意一个，无需填写财务指标，系统自动获取实时数据：</p>
+    <p class="hero-examples-hint" style="margin-top:12px; font-size:0.75rem; color:var(--text-muted);" data-i18n="hero-examples-hint">💡 First time? Click any of the examples below. No need to fill in financial metrics; the system will automatically fetch real-time data:</p>
     <div class="hero-chips" style="margin-top: 8px;" role="group" data-i18n-aria="a11y-hero-chips-group" aria-label="Example tickers">
-        <span data-i18n="hero-chips-try" style="font:500 0.68rem/1 var(--font-mono);color:var(--fg-3)">试试</span>
+        <span data-i18n="hero-chips-try" style="font:500 0.68rem/1 var(--font-mono);color:var(--fg-3)">Try</span>
         <span class="chip" role="button" tabindex="0" data-i18n-aria="a11y-chip-nvda" aria-label="Try NVDA example" onclick="tryExample('NVDA')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryExample('NVDA')}">NVDA</span>
         <span class="chip chip-recommended" role="button" tabindex="0" data-i18n-aria="a11y-chip-aapl" aria-label="Try AAPL example" onclick="tryExample('AAPL')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryExample('AAPL')}">AAPL</span>
         <span class="chip" role="button" tabindex="0" data-i18n-aria="a11y-chip-tsla" aria-label="Try TSLA example" onclick="tryExample('TSLA')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryExample('TSLA')}">TSLA</span>
@@ -466,11 +466,11 @@
     </div>
 
     <p id="hero-ticker-hint" class="field-hint" role="alert" style="display:none; margin-top:6px; font-size:0.75rem; color:var(--signal-sell);"></p>
-    <div class="shortcut-hint" style="margin-top:8px;" data-i18n="hero-shortcut-hint">按 / 快速聚焦 · Ctrl+Enter 提交</div>
+    <div class="shortcut-hint" style="margin-top:8px;" data-i18n="hero-shortcut-hint">Press / to focus · Ctrl+Enter to submit</div>
 
     <!-- Inline loading skeleton -->
     <div id="hero-spinner" role="status" aria-live="polite" aria-busy="true" style="display:none; margin-top:16px; position:relative; z-index:2;">
-        <p class="loading-pulse text-orange text-mono progress-text" id="hero-progress" data-i18n="hero-progress">正在唤醒 18 位投资大师...</p>
+        <p class="loading-pulse text-orange text-mono progress-text" id="hero-progress" data-i18n="hero-progress">Waking up 18 investment masters...</p>
         <div class="grid-3 mt-16" style="gap:12px; max-width:600px;">
             <div class="skeleton skeleton-card"></div>
             <div class="skeleton skeleton-card"></div>
@@ -480,35 +480,35 @@
 
     <!-- Inline result card -->
     <div id="hero-result" class="inline-result" role="region" aria-live="polite" aria-labelledby="hero-result-heading" style="display:none; max-width:600px; margin:16px 0 0; position:relative; z-index:2; background:var(--bg-card); border-radius:var(--r-md); padding:16px; border:1px solid var(--border);">
-        <div id="hero-result-heading" class="sr-only" data-i18n="hero-result-heading">分析结果</div>
+        <div id="hero-result-heading" class="sr-only" data-i18n="hero-result-heading">Analysis Result</div>
         <div id="hr-data-warning" class="data-warning-banner" style="display:none; margin-bottom:12px; padding:8px 12px; font-size:0.75rem; background:rgba(255,171,0,0.1); border:1px solid rgba(255,171,0,0.3); border-radius:var(--radius-sm); color:var(--text-secondary);"></div>
         <div class="flex items-center gap-24" style="flex-wrap:wrap;">
             <div>
-                <div class="data-label" data-i18n="index-label-signal">信号</div>
+                <div class="data-label" data-i18n="index-label-signal">Signal</div>
                 <span id="hr-signal" class="signal-badge signal-badge-neutral signal-big">--</span>
             </div>
             <div>
-                <div class="data-label" data-i18n="index-label-score">评分</div>
+                <div class="data-label" data-i18n="index-label-score">Score</div>
                 <span id="hr-score" class="data-value" style="font-size:1.4rem;">--</span>
             </div>
             <div>
-                <div class="data-label" data-i18n="index-label-confidence">置信度</div>
+                <div class="data-label" data-i18n="index-label-confidence">Confidence</div>
                 <span id="hr-confidence" class="text-mono" style="color:var(--signal-neutral); font-weight:600; font-size:1.1rem;">--</span>
             </div>
         </div>
         <div id="hr-reasoning" class="text-muted" style="font-size:0.8rem; margin-top:12px; line-height:1.6;"></div>
         <div style="margin-top:16px; display:flex; gap:8px; flex-wrap:wrap;">
-            <a id="hr-link" href="/stocks" class="btn btn-sm"><span data-i18n="btn-detail">查看详情</span> &rarr;</a>
-            <a id="hr-report-link" href="/stocks" class="btn btn-sm btn-report-cta">&#x1F4C4; <span data-i18n="btn-report">深度报告</span></a>
+            <a id="hr-link" href="/stocks" class="btn btn-sm"><span data-i18n="btn-detail">View Details</span> &rarr;</a>
+            <a id="hr-report-link" href="/stocks" class="btn btn-sm btn-report-cta">&#x1F4C4; <span data-i18n="btn-report">In-Depth Report</span></a>
         </div>
     </div>
 
     <!-- Inline error -->
     <div id="hero-error" class="error-panel" role="alert" aria-live="assertive" style="display:none; max-width:600px; margin:16px 0 0; position:relative; z-index:2;">
-        <div class="error-panel-title" data-i18n="hero-error-title">分析失败</div>
+        <div class="error-panel-title" data-i18n="hero-error-title">Analysis Failed</div>
         <div class="error-panel-msg" id="hero-error-msg"></div>
         <div class="error-panel-retry">
-            <button class="pixel-btn dark" onclick="heroGo()" data-i18n="btn-retry">重试</button>
+            <button class="pixel-btn dark" onclick="heroGo()" data-i18n="btn-retry">Retry</button>
         </div>
     </div>
 </section>
@@ -568,9 +568,9 @@
             aria-expanded="true" aria-controls="home-panel-body-hot-tickers"
             onclick="toggleHomePanel('hot-tickers')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-hot-tickers">热门标的实时行情</span>
+        <span class="home-panel-title" data-i18n="section-hot-tickers">Hot Tickers</span>
         <span class="home-panel-actions" onclick="event.stopPropagation()">
-            <button class="btn btn-sm btn-ghost" onclick="loadHotTickers(true)" id="hot-refresh-btn" data-i18n-title="btn-refresh" title="刷新">↻ <span data-i18n="btn-refresh">刷新</span></button>
+            <button class="btn btn-sm btn-ghost" onclick="loadHotTickers(true)" id="hot-refresh-btn" data-i18n-title="btn-refresh" title="Refresh">↻ <span data-i18n="btn-refresh">Refresh</span></button>
         </span>
     </button>
     <div class="home-panel-body" id="home-panel-body-hot-tickers">
@@ -590,9 +590,9 @@
             aria-expanded="true" aria-controls="home-panel-body-sector-perf"
             onclick="toggleHomePanel('sector-perf')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-sector-perf">板块行情</span>
+        <span class="home-panel-title" data-i18n="section-sector-perf">Sector Performance</span>
         <span class="home-panel-actions" onclick="event.stopPropagation()">
-            <button class="btn btn-sm btn-ghost" onclick="loadSectorPerformance(true)" id="sector-refresh-btn" data-i18n-title="btn-refresh" title="刷新">&#x21BB; <span data-i18n="btn-refresh">刷新</span></button>
+            <button class="btn btn-sm btn-ghost" onclick="loadSectorPerformance(true)" id="sector-refresh-btn" data-i18n-title="btn-refresh" title="Refresh">&#x21BB; <span data-i18n="btn-refresh">Refresh</span></button>
         </span>
     </button>
     <div class="home-panel-body" id="home-panel-body-sector-perf">
@@ -615,8 +615,8 @@
             aria-expanded="true" aria-controls="home-panel-body-intl-markets"
             onclick="toggleHomePanel('intl-markets')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-intl-markets">国际市场</span>
-        <span class="home-panel-meta text-muted" data-i18n="intl-regions">亚太 · 欧洲</span>
+        <span class="home-panel-title" data-i18n="section-intl-markets">International Markets</span>
+        <span class="home-panel-meta text-muted" data-i18n="intl-regions">APAC · Europe</span>
     </button>
     <div class="home-panel-body" id="home-panel-body-intl-markets">
         <div class="intl-markets-grid" id="intl-markets-grid" aria-live="polite" aria-busy="true" aria-label="International markets loading">
@@ -637,7 +637,7 @@
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
         <span class="home-panel-title" data-i18n="section-crypto">Crypto Overview</span>
         <span class="home-panel-actions" onclick="event.stopPropagation()">
-            <button class="btn btn-sm btn-ghost" onclick="loadCryptoOverview()" id="crypto-refresh-btn" data-i18n-title="btn-refresh" title="刷新">&#x21BB; <span data-i18n="btn-refresh">刷新</span></button>
+            <button class="btn btn-sm btn-ghost" onclick="loadCryptoOverview()" id="crypto-refresh-btn" data-i18n-title="btn-refresh" title="Refresh">&#x21BB; <span data-i18n="btn-refresh">Refresh</span></button>
         </span>
     </button>
     <div class="home-panel-body" id="home-panel-body-crypto">
@@ -659,18 +659,18 @@
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
         <span class="home-panel-title" data-i18n="section-commodities-rates">Commodities &amp; Treasury Rates</span>
         <span class="home-panel-actions" onclick="event.stopPropagation()">
-            <button class="btn btn-sm btn-ghost" onclick="loadCommoditiesAndRates()" id="commod-refresh-btn" data-i18n-title="btn-refresh" title="刷新">&#x21BB; <span data-i18n="btn-refresh">刷新</span></button>
+            <button class="btn btn-sm btn-ghost" onclick="loadCommoditiesAndRates()" id="commod-refresh-btn" data-i18n-title="btn-refresh" title="Refresh">&#x21BB; <span data-i18n="btn-refresh">Refresh</span></button>
         </span>
     </button>
     <div class="home-panel-body" id="home-panel-body-commodities-rates">
         <div class="movers-row" id="commodities-rates-row" aria-live="polite" aria-busy="true" aria-label="Commodities and treasury rates loading">
             <div class="movers-section">
-                <div class="movers-title" style="color:var(--accent-orange);" data-i18n="commodities-label">💰 大宗商品</div>
-                <div id="commodities-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4B0;</div><div class="empty-msg" data-i18n="msg-loading">加载中...</div></div></div>
+                <div class="movers-title" style="color:var(--accent-orange);" data-i18n="commodities-label">💰 Commodities</div>
+                <div id="commodities-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4B0;</div><div class="empty-msg" data-i18n="msg-loading">Loading...</div></div></div>
             </div>
             <div class="movers-section">
-                <div class="movers-title" style="color:var(--accent-orange);" data-i18n="treasury-label">📈 国债收益率</div>
-                <div id="treasury-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F3E6;</div><div class="empty-msg" data-i18n="msg-loading">加载中...</div></div></div>
+                <div class="movers-title" style="color:var(--accent-orange);" data-i18n="treasury-label">📈 Treasury Rates</div>
+                <div id="treasury-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F3E6;</div><div class="empty-msg" data-i18n="msg-loading">Loading...</div></div></div>
             </div>
         </div>
     </div>
@@ -682,17 +682,17 @@
             aria-expanded="true" aria-controls="home-panel-body-top-movers"
             onclick="toggleHomePanel('top-movers')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-top-movers">涨跌幅领先</span>
+        <span class="home-panel-title" data-i18n="section-top-movers">Top Movers</span>
     </button>
     <div class="home-panel-body" id="home-panel-body-top-movers">
         <div class="movers-row" id="movers-row" aria-live="polite" aria-label="Top movers">
             <div class="movers-section">
-                <div class="movers-title gainers" data-i18n="movers-gainers">▲ 领涨</div>
-                <div id="gainers-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4C8;</div><div class="empty-msg" data-i18n="msg-loading">加载中...</div></div></div>
+                <div class="movers-title gainers" data-i18n="movers-gainers">▲ Gainers</div>
+                <div id="gainers-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4C8;</div><div class="empty-msg" data-i18n="msg-loading">Loading...</div></div></div>
             </div>
             <div class="movers-section">
-                <div class="movers-title losers" data-i18n="movers-losers">▼ 领跌</div>
-                <div id="losers-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4C9;</div><div class="empty-msg" data-i18n="msg-loading">加载中...</div></div></div>
+                <div class="movers-title losers" data-i18n="movers-losers">▼ Losers</div>
+                <div id="losers-list"><div class="panel-empty-state"><div class="empty-icon">&#x1F4C9;</div><div class="empty-msg" data-i18n="msg-loading">Loading...</div></div></div>
             </div>
         </div>
     </div>
@@ -704,18 +704,18 @@
             aria-expanded="true" aria-controls="home-panel-body-market-breadth"
             onclick="toggleHomePanel('market-breadth')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-market-breadth">市场宽度</span>
+        <span class="home-panel-title" data-i18n="section-market-breadth">Market Breadth</span>
     </button>
     <div class="home-panel-body" id="home-panel-body-market-breadth">
         <div class="card" style="padding:16px;" id="market-breadth-card">
-            <div class="text-muted" style="font-size:0.78rem;" data-i18n="market-breadth-note">基于热门标的涨跌统计</div>
+            <div class="text-muted" style="font-size:0.78rem;" data-i18n="market-breadth-note">Based on the performance of popular assets</div>
             <div class="breadth-bar-wrap" style="margin-top:8px;">
                 <div class="breadth-bar-advance" id="breadth-advance" style="width:50%;">--</div>
                 <div class="breadth-bar-decline" id="breadth-decline" style="width:50%;">--</div>
             </div>
             <div class="breadth-stats">
-                <span id="breadth-adv-label" data-i18n="breadth-advancing">上涨: --</span>
-                <span id="breadth-dec-label" data-i18n="breadth-declining">下跌: --</span>
+                <span id="breadth-adv-label" data-i18n="breadth-advancing">Advancing: --</span>
+                <span id="breadth-dec-label" data-i18n="breadth-declining">Declining: --</span>
             </div>
         </div>
     </div>
@@ -732,13 +732,13 @@
     <div class="home-panel-body" id="home-panel-body-fear-macro">
         <div class="grid-2" id="fear-macro-row">
             <div class="fear-greed-section" id="fear-greed-section">
-                <div class="section-title spaced" data-i18n="section-fear-greed">恐慌与贪婪指标</div>
+                <div class="section-title spaced" data-i18n="section-fear-greed">Fear &amp; Greed Index</div>
                 <div class="card" style="padding:16px;" id="fear-greed-card" aria-live="polite" data-i18n-aria="a11y-fear-greed" aria-label="Fear and greed index">
-                    <div class="panel-empty-state"><div class="empty-icon">&#x1F4CA;</div><div class="empty-msg" data-i18n="msg-fear-greed-loading">恐慌贪婪数据加载中...</div></div>
+                    <div class="panel-empty-state"><div class="empty-icon">&#x1F4CA;</div><div class="empty-msg" data-i18n="msg-fear-greed-loading">Loading fear and greed data ...</div></div>
                 </div>
             </div>
             <div class="macro-snapshot-section">
-                <div class="section-title spaced" data-i18n="section-macro">宏观经济快照</div>
+                <div class="section-title spaced" data-i18n="section-macro">Macro Economic Snapshot</div>
                 <div class="macro-snapshot-grid" id="macro-snapshot-grid" aria-live="polite" aria-busy="true" data-i18n-aria="a11y-macro-snapshot" aria-label="Macro economic snapshot">
                     <div class="macro-card skeleton" style="height:80px;"></div>
                     <div class="macro-card skeleton" style="height:80px;"></div>
@@ -755,14 +755,14 @@
             aria-expanded="true" aria-controls="home-panel-body-leaderboard"
             onclick="toggleHomePanel('leaderboard')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-leaderboard">Augur 共识排行榜</span>
-        <span class="home-panel-meta text-muted" data-i18n="leaderboard-note">基于本地分析历史</span>
+        <span class="home-panel-title" data-i18n="section-leaderboard">Augur Consensus Leaderboard</span>
+        <span class="home-panel-meta text-muted" data-i18n="leaderboard-note">Based on local analysis history</span>
     </button>
     <div class="home-panel-body" id="home-panel-body-leaderboard">
         <div class="card" style="padding:0; overflow:hidden;" id="leaderboard-section">
             <ul class="leaderboard-list" id="leaderboard-list">
                 <li class="leaderboard-item" style="justify-content:center; flex-wrap:wrap; gap:8px;">
-                    <span class="text-muted" style="font-size:0.78rem;" data-i18n="leaderboard-empty">尚无分析记录，去分析一只股票吧</span>
+                    <span class="text-muted" style="font-size:0.78rem;" data-i18n="leaderboard-empty">No analysis records yet, go analyze a stock.</span>
                     <span class="chip chip-recommended" role="button" tabindex="0" data-i18n-aria="a11y-chip-aapl" aria-label="Try AAPL example" onclick="tryExample('AAPL')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryExample('AAPL')}">AAPL</span>
                 </li>
             </ul>
@@ -788,10 +788,10 @@
             <div class="aug-card">
                 <div class="aug-card-head">
                     <span data-i18n="section-featured-personas">Featured Masters</span>
-                    <a href="/personas" data-i18n="btn-view-all-personas" style="font:600 0.62rem/1 var(--font-pixfin);color:var(--amber);cursor:pointer;text-transform:uppercase">查看全部 18 位</a>
+                    <a href="/personas" data-i18n="btn-view-all-personas" style="font:600 0.62rem/1 var(--font-pixfin);color:var(--amber);cursor:pointer;text-transform:uppercase">View All 18</a>
                 </div>
                 <div class="persona-chips mb-8" role="group" data-i18n-aria="a11y-persona-chips-group" style="display:flex;flex-wrap:wrap;gap:6px;align-items:center;padding:0 12px 8px;">
-                    <span class="text-muted" style="font-size:0.68rem;" data-i18n="featured-personas-hint">想换视角？选一位大师，用 AAPL 快速体验</span>
+                    <span class="text-muted" style="font-size:0.68rem;" data-i18n="featured-personas-hint">Want a different perspective? Pick a master and quickly analyze AAPL.</span>
                     <span class="chip persona-chip" role="button" tabindex="0" data-i18n-aria="a11y-persona-chip-buffett" data-aria-name="Warren Buffett" aria-label="Analyze AAPL with Warren Buffett" onclick="tryPersona('buffett')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryPersona('buffett')}">Buffett</span>
                     <span class="chip persona-chip" role="button" tabindex="0" data-i18n-aria="a11y-persona-chip-graham" data-aria-name="Benjamin Graham" aria-label="Analyze AAPL with Benjamin Graham" onclick="tryPersona('graham')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryPersona('graham')}">Graham</span>
                     <span class="chip persona-chip" role="button" tabindex="0" data-i18n-aria="a11y-persona-chip-cathie_wood" data-aria-name="Cathie Wood" aria-label="Analyze AAPL with Cathie Wood" onclick="tryPersona('cathie_wood')" onkeydown="if(event.key==='Enter'||event.key===' '){event.preventDefault();tryPersona('cathie_wood')}">Wood</span>
@@ -821,7 +821,7 @@
             aria-expanded="true" aria-controls="home-panel-body-datasources"
             onclick="toggleHomePanel('datasources')">
         <span class="home-panel-chevron" aria-hidden="true">▾</span>
-        <span class="home-panel-title" data-i18n="section-datasource">数据源状态</span>
+        <span class="home-panel-title" data-i18n="section-datasource">Data Source Status</span>
         <span class="home-panel-meta text-muted" id="ds-chain-label"></span>
     </button>
     <div class="home-panel-body" id="home-panel-body-datasources">
@@ -838,22 +838,22 @@
 
 
 <!-- How it works -->
-<div class="section-title compact" data-i18n="section-how-it-works">工作原理</div>
+<div class="section-title compact" data-i18n="section-how-it-works">How it works</div>
 <div class="grid-3 mb-24">
     <div class="card" style="text-align:center; padding:24px 16px;">
         <div style="font-size:1.8rem; margin-bottom:8px;">&#x1F4CA;</div>
-        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step1-title">1. 输入代码</h4>
-        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step1-desc">只需股票代码，系统自动获取实时数据（也可手动填指标）</p>
+        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step1-title">1. Enter Ticker</h4>
+        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step1-desc">Just enter the stock ticker, the system automatically fetches real-time data (manual input of indicators is also possible)</p>
     </div>
     <div class="card" style="text-align:center; padding:24px 16px;">
         <div style="font-size:1.8rem; margin-bottom:8px;">&#x1F916;</div>
-        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step2-title">2. 多Agent分析</h4>
-        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step2-desc">{{ agent_count }} 位投资大师从各自视角独立分析</p>
+        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step2-title">2. Multi-Agent Analysis</h4>
+        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step2-desc">{{ agent_count }} investment masters independently analyze from their own perspectives</p>
     </div>
     <div class="card" style="text-align:center; padding:24px 16px;">
         <div style="font-size:1.8rem; margin-bottom:8px;">&#x1F3AF;</div>
-        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step3-title">3. 共识决策</h4>
-        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step3-desc">行业加权、机制感知，形成最终共识信号</p>
+        <h4 style="color:var(--accent-orange); font-size:0.88rem;" data-i18n="how-step3-title">3. Consensus Decision</h4>
+        <p class="text-muted" style="font-size:0.78rem; margin:0;" data-i18n="how-step3-desc">Industry weighting and mechanism awareness form the final consensus signal</p>
     </div>
 </div>
 
@@ -965,9 +965,9 @@ function heroGo() {
         .then(function(r) {
             if (!r.ok) {
                 return r.json().then(function(e) {
-                    throw new Error(e.detail || ('请求失败 (HTTP ' + r.status + ')'));
+                    throw new Error(e.detail || ('Request failed (HTTP ' + r.status + ')'));
                 }, function() {
-                    throw new Error('请求失败 (HTTP ' + r.status + ')');
+                    throw new Error('Request failed (HTTP ' + r.status + ')');
                 });
             }
             return r.json();
@@ -977,7 +977,7 @@ function heroGo() {
             spinner.style.display = 'none';
             spinner.setAttribute('aria-busy', 'false');
             if (!data || !data.consensus) {
-                throw new Error(data && data.detail ? data.detail : '分析返回数据异常，请重试');
+                throw new Error(data && data.detail ? data.detail : 'Analysis returned abnormal data, please try again');
             }
             var cons = data.consensus || {};
             var signal = (cons.signal || 'neutral').toLowerCase();

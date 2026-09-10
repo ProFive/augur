@@ -27,47 +27,47 @@
 {% block content %}
 <header class="page-header mb-16">
     <div class="page-header__text">
-        <h1 class="page-title" data-i18n="scanner_title">市场扫描器</h1>
-        <p class="page-lead" data-i18n="scanner_desc">选择预设列表或输入自定义股票代码，一键让18位大师快速评分</p>
+        <h1 class="page-title" data-i18n="scanner_title">Market Scanner</h1>
+        <p class="page-lead" data-i18n="scanner_desc">Select a preset list or enter custom stock tickers for a quick rating by 18 experts</p>
     </div>
 </header>
 
 <!-- Preset buttons -->
 <div class="scanner-presets" role="group" aria-label="Scanner presets">
-    <button type="button" class="preset-chip" onclick="loadPreset('tech_giants', this)" data-i18n="scanner_preset_tech">科技巨头</button>
-    <button type="button" class="preset-chip" onclick="loadPreset('china_stocks', this)" data-i18n="scanner_preset_china">中概股</button>
-    <button type="button" class="preset-chip" onclick="loadPreset('crypto', this)" data-i18n="scanner_preset_crypto">加密货币</button>
+    <button type="button" class="preset-chip" onclick="loadPreset('tech_giants', this)" data-i18n="scanner_preset_tech">Tech Giants</button>
+    <button type="button" class="preset-chip" onclick="loadPreset('china_stocks', this)" data-i18n="scanner_preset_china">China Stocks</button>
+    <button type="button" class="preset-chip" onclick="loadPreset('crypto', this)" data-i18n="scanner_preset_crypto">Cryptocurrency</button>
 </div>
 
 <!-- Custom input -->
 <div class="card mb-16" style="padding:16px;">
-    <label class="data-label" for="scanner-tickers" data-i18n="scanner_custom_label">自定义标的 (逗号分隔)</label>
+    <label class="data-label" for="scanner-tickers" data-i18n="scanner_custom_label">Custom Tickers (comma-separated)</label>
     <textarea class="scanner-input" id="scanner-tickers" placeholder="AAPL, NVDA, TSLA, BTC-USD" aria-describedby="scanner-limit-hint" oninput="updateScannerCount()"></textarea>
     <div class="flex items-center justify-between mt-12">
-        <span id="scanner-limit-hint" class="text-muted" style="font-size:0.72rem;" data-i18n="scanner_limit">最多20个标的</span>
-        <button type="button" class="btn btn-primary" onclick="runScanner()" id="scanner-run-btn" data-i18n="scanner_run">开始扫描</button>
+        <span id="scanner-limit-hint" class="text-muted" style="font-size:0.72rem;" data-i18n="scanner_limit">Up to 20 tickers</span>
+        <button type="button" class="btn btn-primary" onclick="runScanner()" id="scanner-run-btn" data-i18n="scanner_run">Run Scanner</button>
     </div>
 </div>
 
 <!-- Idle empty state -->
 <div id="scanner-idle" class="empty-state card mb-16">
     <span class="empty-state-icon" aria-hidden="true"><svg viewBox="0 0 52 52"><circle cx="22" cy="22" r="14"/><path d="M32 32l12 12"/><path d="M15 19h14M15 22h14M15 25h10"/></svg></span>
-    <div class="empty-state-title" data-i18n="scanner-empty-title">选择预设或输入代码开始扫描</div>
-    <p class="empty-state-desc" data-i18n="scanner-empty-desc">18 位大师将对每个标的独立评分，生成共识热力图</p>
+    <div class="empty-state-title" data-i18n="scanner-empty-title">Select a preset or enter tickers to start scanning</div>
+    <p class="empty-state-desc" data-i18n="scanner-empty-desc">18 experts will independently rate each ticker, generating a consensus heatmap</p>
 </div>
 
 <!-- Loading -->
 <div id="scanner-loading" style="display:none;" class="mb-16">
-    <p class="loading-pulse text-orange text-mono" id="scanner-progress" data-i18n="scanner-loading">正在扫描...</p>
+    <p class="loading-pulse text-orange text-mono" id="scanner-progress" data-i18n="scanner-loading">Scanning...</p>
 </div>
 
 <!-- Results -->
 <div id="scanner-results" style="display:none;">
     <div class="flex items-center justify-between mb-12">
-        <div class="section-title compact" data-i18n="scanner_results_title">扫描结果</div>
+        <div class="section-title compact" data-i18n="scanner_results_title">Scan Results</div>
         <div style="display:flex; gap:8px; align-items:center;">
             <span class="text-muted" style="font-size:0.72rem;" id="scanner-summary"></span>
-            <button type="button" class="btn btn-sm" onclick="exportScannerCSV()" data-i18n="scanner-export-csv">导出 CSV</button>
+            <button type="button" class="btn btn-sm" onclick="exportScannerCSV()" data-i18n="scanner-export-csv">Export CSV</button>
         </div>
     </div>
     <div class="card" style="padding:0; overflow:hidden;">
@@ -79,10 +79,10 @@
 
 <!-- Error -->
 <div id="scanner-error" class="error-panel" style="display:none;" role="alert" aria-live="polite">
-    <div class="error-panel-title" data-i18n="scanner-error-title">扫描失败</div>
+    <div class="error-panel-title" data-i18n="scanner-error-title">Scan Failed</div>
     <div class="error-panel-msg" id="scanner-error-msg"></div>
     <div class="error-panel-retry">
-        <button class="btn btn-sm" onclick="runScanner()" data-i18n="btn-retry">重试</button>
+        <button class="btn btn-sm" onclick="runScanner()" data-i18n="btn-retry">Retry</button>
     </div>
 </div>
 {% endblock %}
